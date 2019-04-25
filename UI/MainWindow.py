@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Norton & Abert\Project Rudy\Rudy\UI\MainWindow.ui'
+# Form implementation generated from reading ui file 'MainWindow.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created by: PyQt4 UI code generator 4.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -399,6 +399,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addWidget(self.addMatter)
         spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem1)
+        self.includeDeteled = QtGui.QCheckBox(self.mattersGroup)
+        self.includeDeteled.setObjectName(_fromUtf8("includeDeteled"))
+        self.horizontalLayout_5.addWidget(self.includeDeteled)
         self.verticalLayout_8.addLayout(self.horizontalLayout_5)
         self.matterList = QtGui.QTableWidget(self.mattersGroup)
         self.matterList.setObjectName(_fromUtf8("matterList"))
@@ -483,7 +486,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_6.setStretch(1, 5)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1418, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1418, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuAdmin = QtGui.QMenu(self.menubar)
         self.menuAdmin.setObjectName(_fromUtf8("menuAdmin"))
@@ -583,6 +586,7 @@ class Ui_MainWindow(object):
         self.clientAddress_3.setTitle(_translate("MainWindow", "Notes", None))
         self.mattersGroup.setTitle(_translate("MainWindow", "Client Matters", None))
         self.addMatter.setText(_translate("MainWindow", "Add New Matter", None))
+        self.includeDeteled.setText(_translate("MainWindow", "Include Flagged for Deletion", None))
         item = self.matterList.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Matter #", None))
         item = self.matterList.horizontalHeaderItem(1)

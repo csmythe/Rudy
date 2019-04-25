@@ -2,13 +2,13 @@
 block_cipher = None
 
 datas = [('./UI/Icons/*.ico','./UI/Icons'),
-('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\platforms\\qwindows.dll','.'),
-('C:\\Python34\\Lib\\site-packages\\PyQt4\\libEGL.dll','.'),
-('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\imageformats\\qico.dll','.\\imageformats'),
+#('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\platforms\\qwindows.dll','.'),
+#('C:\\Python34\\Lib\\site-packages\\PyQt4\\libEGL.dll','.'),
+#('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\imageformats\\qico.dll','.\\imageformats'),
 ]
 
 a = Analysis(['Rudy.py'],
-             pathex=['D:\\Norton & Abert\\Project Rudy\\Rudy'],
+             pathex=[r'/home/csmythe/PycharmProjects/Rudy'],
              binaries=None,
              datas=datas,
              hiddenimports=[],

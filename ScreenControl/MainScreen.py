@@ -31,7 +31,7 @@ class MainMatterScreen(QtGui.QMainWindow):
         
         
         for i in dir(self.ui):
-            if i != 'showInactive' and i not in ['searchFirst','searchLast','searchAddr', 'searchCity','searchState','searchContacts','seeDeleted']: 
+            if i != 'showInactive' and i not in ['searchFirst','searchLast','searchAddr', 'searchCity','searchState','searchContacts','seeDeleted','includeDeteled']:
                 exec("initializeChangeTracking(self,self.ui.{})".format(i))
         
         self.ui.actionManage_Matter_Types.triggered.connect(partial( self.openManager, MatterManager))
@@ -47,7 +47,7 @@ class MainMatterScreen(QtGui.QMainWindow):
         self.ui.reset.clicked.connect(self.resetFilters)
         self.ui.search.clicked.connect(self.listClients)
         self.ui.deleteAccount.clicked.connect(self.deleteClient)
-        
+        self.ui.includeDeteled.stateChanged.connect(self.listMatters)
         
         
     def resetFilters(self):
@@ -126,6 +126,7 @@ class MainMatterScreen(QtGui.QMainWindow):
             self.ui.email.clear()
             self.ui.notes.clear()
             self.ui.donotrep.setCheckState(0)
+            self.ui.includeDeteled.setCheckState(0)
             self.ui.matterList.setRowCount(0)
             
             self.lockFields()
@@ -246,8 +247,6 @@ class MainMatterScreen(QtGui.QMainWindow):
             else:
                 reply = QtGui.QMessageBox.question(self, 'Delete Account', 'Do you want to delete this account?',
                                                    QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-                
-            
 
             if reply == QtGui.QMessageBox.Yes:        
                 if self.ui.deleteAccount.actionDate is None:
@@ -405,14 +404,14 @@ class MainMatterScreen(QtGui.QMainWindow):
         
         self.ui.addMatter.setEnabled(True)
         
-        self.listMatters(self.data.clientnum)
+        self.listMatters()
             
-    def listMatters(self, clientnum):
+    def listMatters(self):
         
         self.ui.matterList.setRowCount(0)
-        for r, data in MtrFuncs.generateClientMatters(clientnum):
+        for r, data in MtrFuncs.generateClientMatters(self.data.clientnum, self.ui.includeDeteled.checkState() == 2):
             self.ui.matterList.insertRow(r)
-            matterLabel = QtGui.QLabel("{}.{}".format(str(clientnum),str(data.matternum)))
+            matterLabel = QtGui.QLabel("{}.{}".format(str(self.data.clientnum),str(data.matternum)))
             matterLabel.data = data
             if data.dateclosed is not None:
                 closed = 'Yes'

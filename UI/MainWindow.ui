@@ -76,16 +76,7 @@ QIcon{background-color:rga(1,1,1);}</string>
        <bool>true</bool>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="leftMargin">
-        <number>0</number>
-       </property>
-       <property name="topMargin">
-        <number>0</number>
-       </property>
-       <property name="rightMargin">
-        <number>0</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>0</number>
        </property>
        <item>
@@ -324,16 +315,7 @@ QIcon{background-color:rga(1,1,1);}</string>
              <property name="spacing">
               <number>1</number>
              </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>1</number>
              </property>
              <item>
@@ -436,16 +418,7 @@ QIcon{background-color:rga(1,1,1);}</string>
              <property name="spacing">
               <number>1</number>
              </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>1</number>
              </property>
              <item>
@@ -534,16 +507,7 @@ QIcon{background-color:rga(1,1,1);}</string>
              <property name="spacing">
               <number>1</number>
              </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>1</number>
              </property>
              <item>
@@ -609,16 +573,7 @@ QIcon{background-color:rga(1,1,1);}</string>
              <property name="spacing">
               <number>1</number>
              </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>1</number>
              </property>
              <item>
@@ -707,16 +662,7 @@ QIcon{background-color:rga(1,1,1);}</string>
              <property name="spacing">
               <number>1</number>
              </property>
-             <property name="leftMargin">
-              <number>1</number>
-             </property>
-             <property name="topMargin">
-              <number>1</number>
-             </property>
-             <property name="rightMargin">
-              <number>1</number>
-             </property>
-             <property name="bottomMargin">
+             <property name="margin">
               <number>1</number>
              </property>
              <item>
@@ -775,6 +721,13 @@ QIcon{background-color:rga(1,1,1);}</string>
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="includeDeteled">
+                 <property name="text">
+                  <string>Include Flagged for Deletion</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -963,7 +916,7 @@ QIcon{background-color:rga(1,1,1);}</string>
      <x>0</x>
      <y>0</y>
      <width>1418</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuAdmin">

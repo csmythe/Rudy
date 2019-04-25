@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Norton & Abert\Project Rudy\Rudy\UI\ReportWindow.ui'
+# Form implementation generated from reading ui file 'ReportWindow.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created by: PyQt4 UI code generator 4.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -67,6 +67,7 @@ class Ui_ReportFrame(object):
         self.layoutWidget = QtGui.QWidget(self.splitter)
         self.layoutWidget.setObjectName(_fromUtf8("layoutWidget"))
         self.verticalLayout_3 = QtGui.QVBoxLayout(self.layoutWidget)
+        self.verticalLayout_3.setMargin(0)
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.horizontalLayout = QtGui.QHBoxLayout()
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -105,6 +106,7 @@ class Ui_ReportFrame(object):
         self.page.setGeometry(QtCore.QRect(0, 0, 535, 397))
         self.page.setObjectName(_fromUtf8("page"))
         self.verticalLayout = QtGui.QVBoxLayout(self.page)
+        self.verticalLayout.setMargin(0)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.displayCols = QtGui.QTreeWidget(self.page)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Expanding)
@@ -136,6 +138,7 @@ class Ui_ReportFrame(object):
         self.page_2.setGeometry(QtCore.QRect(0, 0, 535, 397))
         self.page_2.setObjectName(_fromUtf8("page_2"))
         self.gridLayout = QtGui.QGridLayout(self.page_2)
+        self.gridLayout.setMargin(0)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
         self.label = QtGui.QLabel(self.page_2)
         self.label.setAlignment(QtCore.Qt.AlignCenter)

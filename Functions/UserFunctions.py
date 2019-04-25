@@ -51,6 +51,31 @@ def cleanOutDeletedAccounts(cutoffDate):
         CONN.writeData(q2,clientnum)
         CONN.writeData(q3,clientnum)
         CONN.writeData(q4,clientnum)
+
+
+def cleanout_deleted_matters(cutoff_date):
+    q = """
+    SELECT ClientNum, MatterNum
+    FROM [NortonAbert].[dbo].[ClientMatters]
+    WHERE [Delete] = 1 AND DeleteDate <= ?
+    """
+    v = [str(cutoff_date)]
+
+    q1 = "DELETE FROM [NortonAbert].[dbo].OriginalDocuments WHERE ClientNum = ? AND MatterNum = ?"
+    q2 = "DELETE FROM [NortonAbert].[dbo].ClientMatters WHERE ClientNum = ? AND MatterNum = ?"
+    q3 = "DELETE FROM [NortonAbert].[dbo].AdverseParties WHERE ClientNum = ? AND MatterNum = ?"
+
+    CONN.connect()
+    data = CONN.readData(q, v)
+
+    for i in data.index:
+        matter = [str(data.clientnum[i]), str(data.matternum[i])]
+        CONN.writeData(q1, matter)
+        CONN.writeData(q2, matter)
+        CONN.writeData(q3, matter)
+
         
-    
+def run_database_cleanup(cutoff_date):
+    cleanOutDeletedAccounts(cutoff_date)
+    cleanout_deleted_matters(cutoff_date)
     

@@ -108,6 +108,23 @@ QToolButton#nextPage{
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QToolButton" name="delete_matter">
+        <property name="text">
+         <string>Delete</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>Icons/delete.ico</normaloff>Icons/delete.ico</iconset>
+        </property>
+        <property name="autoRepeatDelay">
+         <number>300</number>
+        </property>
+        <property name="toolButtonStyle">
+         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -124,16 +141,7 @@ QToolButton#nextPage{
          <property name="spacing">
           <number>1</number>
          </property>
-         <property name="leftMargin">
-          <number>1</number>
-         </property>
-         <property name="topMargin">
-          <number>1</number>
-         </property>
-         <property name="rightMargin">
-          <number>1</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>1</number>
          </property>
          <item>
@@ -177,11 +185,11 @@ QToolButton#nextPage{
             </item>
             <item row="3" column="1">
              <widget class="QDateEdit" name="dateOpened">
-              <property name="showGroupSeparator" stdset="0">
-               <bool>false</bool>
-              </property>
               <property name="calendarPopup">
                <bool>true</bool>
+              </property>
+              <property name="showGroupSeparator" stdset="0">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -225,11 +233,11 @@ QToolButton#nextPage{
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="showGroupSeparator" stdset="0">
-                 <bool>false</bool>
-                </property>
                 <property name="calendarPopup">
                  <bool>true</bool>
+                </property>
+                <property name="showGroupSeparator" stdset="0">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
@@ -247,14 +255,14 @@ QToolButton#nextPage{
               <property name="specialValueText">
                <string>No Assets</string>
               </property>
-              <property name="showGroupSeparator" stdset="0">
-               <bool>true</bool>
-              </property>
               <property name="prefix">
                <string>$ </string>
               </property>
               <property name="maximum">
                <double>9999999999.989999771118164</double>
+              </property>
+              <property name="showGroupSeparator" stdset="0">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -273,16 +281,7 @@ QToolButton#nextPage{
          <bool>true</bool>
         </property>
         <layout class="QGridLayout" name="gridLayout_2">
-         <property name="leftMargin">
-          <number>1</number>
-         </property>
-         <property name="topMargin">
-          <number>1</number>
-         </property>
-         <property name="rightMargin">
-          <number>1</number>
-         </property>
-         <property name="bottomMargin">
+         <property name="margin">
           <number>1</number>
          </property>
          <item row="1" column="0">
@@ -504,6 +503,16 @@ QToolButton#nextPage{
             <widget class="QToolButton" name="setDirectory">
              <property name="text">
               <string>Set Directory</string>
+             </property>
+             <property name="toolButtonStyle">
+              <enum>Qt::ToolButtonTextBesideIcon</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="clearPath">
+             <property name="text">
+              <string>Clear Dir.</string>
              </property>
              <property name="toolButtonStyle">
               <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -798,8 +807,8 @@ QToolButton#nextPage{
   <tabstop>assets</tabstop>
   <tabstop>useClientAddress</tabstop>
   <tabstop>firstName</tabstop>
-  <tabstop>lastName</tabstop>
   <tabstop>middleInitial</tabstop>
+  <tabstop>lastName</tabstop>
   <tabstop>addr1</tabstop>
   <tabstop>addr2</tabstop>
   <tabstop>billCity</tabstop>

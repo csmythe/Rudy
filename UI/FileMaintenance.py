@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\Norton & Abert\Project Rudy\Rudy\UI\FileMaintenance.ui'
+# Form implementation generated from reading ui file 'FileMaintenance.ui'
 #
-# Created by: PyQt4 UI code generator 4.11.4
+# Created by: PyQt4 UI code generator 4.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -73,7 +73,7 @@ class Ui_FileMaint(object):
 "font: 75 12pt \"Microsoft Tai Le\";    "))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label, QtCore.Qt.AlignTop)
+        self.verticalLayout.addWidget(self.label, 0, QtCore.Qt.AlignTop)
         self.formLayout = QtGui.QFormLayout()
         self.formLayout.setVerticalSpacing(0)
         self.formLayout.setObjectName(_fromUtf8("formLayout"))

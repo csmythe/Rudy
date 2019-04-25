@@ -1,24 +1,29 @@
 from connectors import *
 from pandas.io.sql import read_sql
+
+class Target:
+    # driver = '{SQL Server}'
+    # server = r'App1\SQLEXPRESS'
+    driver = '{ODBC Driver 17 for SQL Server}'
+    server = r'system76-pc'
+    username = 'nortUser'
+    pwd = 'nortPassword123'
+    database = 'NortonAbert'
+
 class Connection:
     
     is_closed = True
     
-    def connect(self, driver ="{SQL Server}", #  '{ODBC Driver 13 for SQL Server}',  #
-                    server = r'App1\SQLEXPRESS',#r'SMYTHEPC\SQLEXPRESS', #
-                    database = "NortonAbert",
-                    username = "nortUser",
-                    pwd = "nortPassword123",
-                    auto_commit = True):
+    def connect(self, auto_commit = True):
         
         
         if not self.is_closed:
             self.closecnxn()
             
         if DEMO == 1:
-            self.cnxn = sqlite3.connect(database)
+            self.cnxn = sqlite3.connect(Target.database)
         else:
-            string = "DRIVER="+driver+";SERVER="+server+";DATABASE="+database+";UID="+username+";PWD="+pwd
+            string = "DRIVER="+Target.driver+";SERVER="+Target.server+";DATABASE="+Target.database+";UID="+Target.username+";PWD="+Target.pwd
             self.cnxn = odbc.connect(string,autocommit = auto_commit)
         
     def closecnxn(self):
@@ -87,3 +92,9 @@ class Connection:
             vals = [str(data['params'][key]) for key in data['params'].keys()]
         
         return self.writeData(q,vals)
+
+
+if __name__ == '__main__':
+    conn = Connection()
+    conn.connect()
+    conn.closecnxn()

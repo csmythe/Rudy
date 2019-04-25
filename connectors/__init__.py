@@ -1,11 +1,16 @@
-import pypyodbc as odbc
+
 import sqlite3, os
 from getpass import getuser
 
+os.environ['LD_LIBRARY_PATH'] = os.getcwd()
+import pypyodbc as odbc
+
 DEMO = 0
-PATH = 'C:\\Users\\{}\\Documents\\RudyExports'.format(getuser())
-if not os.path.isdir(PATH):
-    os.makedirs(PATH)
+PATH ='.'# 'C:\\Users\\{}\\Documents\\RudyExports'.format(getuser())
+# if not os.path.isdir(PATH):
+#     os.makedirs(PATH)
+
+
 
 def demo(func):
     def initialize(*args, **kwargs): 

@@ -316,11 +316,11 @@ class CleanUp(QtGui.QFrame):
         self.ui.run.clicked.connect(self.startDeleting)
         
     def startDeleting(self):
-        reply = QtGui.QMessageBox.warning(self, "Caution: Deleting Permanently", "You are about to PERMANENTLY remove accounts and ALL the saved data related to those accounts.  Are you sure you want to continue?", 
+        reply = QtGui.QMessageBox.warning(self, "Caution: Deleting Permanently", "You are about to PERMANENTLY remove accounts and matters and ALL the related saved data.  Are you sure you want to continue?",
                                           QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
         if reply == QtGui.QMessageBox.Yes:
             delDate = self.ui.delDate.date().toPyDate()
-            UsrFuncs.cleanOutDeletedAccounts(delDate)
+            UsrFuncs.run_database_cleanup(delDate)
             alert = QMessageBox()
             alert.setWindowTitle("Complete")
             alert.setText("Clean up completed")

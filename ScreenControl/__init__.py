@@ -49,6 +49,7 @@ California,CA
 Colorado,CO
 Connecticut,CT
 Delaware,DE
+Washington D.C.,DC
 Florida,FL
 Georgia,GA
 Hawaii,HI

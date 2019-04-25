@@ -26,11 +26,13 @@ def checkValidMatterNumber(clientnum, matternum):
     
     return len(data) > 0
 
-def generateClientMatters(clientnum):
+def generateClientMatters(clientnum, include_deleted):
     q = """SELECT  cm.*, mt.matterdescr
             FROM [NortonAbert].[dbo].ClientMatters cm 
                 LEFT JOIN [NortonAbert].[dbo].MatterTypes mt on cm.mattertypeid = mt.typeid 
             WHERE cm.ClientNum = ?"""
+    if not include_deleted:
+        q += " AND cm.[Delete] = 0"
     v = [str(clientnum)]
     
     CONN.connect()
@@ -39,6 +41,20 @@ def generateClientMatters(clientnum):
     
     for r, i in enumerate(data.index):
         yield r, data.loc[i]
+
+
+def get_client_matter(clientnum, matternum):
+    q = """SELECT  cm.*, mt.matterdescr
+                FROM [NortonAbert].[dbo].ClientMatters cm 
+                    LEFT JOIN [NortonAbert].[dbo].MatterTypes mt on cm.mattertypeid = mt.typeid 
+                WHERE cm.ClientNum = ? and cm.MatterNum = ?"""
+    v = [str(clientnum), str(matternum)]
+
+    CONN.connect()
+    data = CONN.readData(q, v)
+    CONN.closecnxn()
+    return data.loc[0]
+
 
 def nextMatterNum(clientNum):
     q = """

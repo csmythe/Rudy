@@ -25,6 +25,7 @@ class ClientMatter(QtGui.QMainWindow):
         self.ui.apClear.setIcon(QtGui.QIcon(clearIcon))
         self.ui.apSave.setIcon(QtGui.QIcon(saveIcon))
         self.ui.apDelete.setIcon(QtGui.QIcon(deleteIcon))
+        self.ui.delete_matter.setIcon(QtGui.QIcon(deleteIcon))
         
         self.client = client
         self.clientnum = clientnum
@@ -70,7 +71,9 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         self.ui.closed.stateChanged.connect(self.closeMatter)
         
         self.ui.attachDocument.clicked.connect(self.attachDocumentToMatter)
+        self.ui.clearPath.clicked.connect(self.clearMatterPath)
         self.ui.setDirectory.clicked.connect(self.setMatterDirectory)
+        self.ui.delete_matter.clicked.connect(self.mark_to_be_deleted)
         
     def formatMatterNumber(self):
         currNum = self.ui.matterNum.text()
@@ -170,9 +173,18 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         self.ui.apDelete.setEnabled(False)
         self.ui.apClear.setEnabled(True)
         self.ui.apNew.setEnabled(True)
+        self.ui.delete_matter.setEnabled(False)
         
         self.listDocuments()
         self.listAdverseParties()
+
+        if not self.matter.delete:
+            self.ui.delete_matter.setIcon(QtGui.QIcon(deleteIcon))
+            self.ui.delete_matter.setText('Delete')
+        else:
+            self.ui.delete_matter.setIcon(QtGui.QIcon(alertIcon))
+            self.ui.delete_matter.setText('Restore')
+
         
     def closeMatter(self,state):
         if state ==2:
@@ -221,22 +233,28 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         dirpath = QtGui.QFileDialog.getExistingDirectory(parent=self, caption='Set Matter Directory', directory='C:\\')
         
         if dirpath != '':
-            self.ui.currentDir.setText(dirpath)
-            
-            data = {'action':'update',
-                    'table':'ClientMatters',
-                    'values':{
-                              'MatterDir':str(self.ui.currentDir.text())
-                              },
-                    'params':{}
-                    }
-            
-            data['params']['ClientNum'] = self.ui.clientNum.text()
-            data['params']['MatterNum'] = self.ui.matterNum.text()
-            
-            CONN.connect()
-            CONN.saveData(data)
-            CONN.closecnxn()
+            self.save_dir_path_change(dirpath)
+
+    def clearMatterPath(self):
+        self.save_dir_path_change('')
+
+    def save_dir_path_change(self, dirpath):
+        self.ui.currentDir.setText(dirpath)
+
+        data = {'action': 'update',
+                'table': 'ClientMatters',
+                'values': {
+                    'MatterDir': str(self.ui.currentDir.text())
+                },
+                'params': {}
+                }
+
+        data['params']['ClientNum'] = self.ui.clientNum.text()
+        data['params']['MatterNum'] = self.ui.matterNum.text()
+
+        CONN.connect()
+        CONN.saveData(data)
+        CONN.closecnxn()
     
     def attachDocumentToMatter(self):
         currentDir = self.ui.currentDir.text()
@@ -345,7 +363,7 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         reasonGiven = self.ui.reason.text()
         
         action = self.ui.apFirst.action
-        print(action, type(action), action == 'new')
+
         if action is not None:
             partyid = self.ui.apFirst.partyid
             data = {'action':action,
@@ -452,7 +470,8 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
                               'AttorneyInitials':self.ui.attorneyInitials.text(),
                               'EstateAssets':str(self.ui.assets.value()),
                               'MatterDir':str(self.ui.currentDir.text()),
-                              'MatterTypeID':str(mattertype)
+                              'MatterTypeID':str(mattertype),
+                              '[Delete]':str(0)
                               },
                     'params':{}
                     }
@@ -494,7 +513,8 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
             
             self.ui.actionEdit.setText('Edit')
             
-            self.client.listMatters(self.clientnum)
+            self.client.listMatters()
+            self.reload_matter()
         
     def populateClientAddress(self):
         clientInfo = ClntFuncs.getClientInfo(self.clientnum)
@@ -521,6 +541,62 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         for i, m in enumerate(matterTypes.index):
             self.ui.matterType.addItem(matterTypes.matterdescr[m])
             self.ui.matterType.setItemData(i+1, int(matterTypes.typeid[m]))
+
+
+    def mark_to_be_deleted(self):
+        if not self.matter.delete:
+            reply = QMessageBox.question(self, 'Delete Matter?', 'You are about to mark this matter to be deleted.  Are you sure?', QMessageBox.Yes, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                data = {'action': 'update',
+                        'table': 'ClientMatters',
+                        'values': {'[Delete]': str(1),
+                                   '[DeleteDate]':str(dt.today().date())
+                                   },
+                        'params': {'ClientNum':self.ui.clientNum.text(),
+                                   'MatterNum':self.ui.matterNum.text()
+                                   }
+                        }
+
+                CONN.connect()
+                CONN.saveData(data)
+                CONN.closecnxn()
+
+                self.client.listMatters()
+
+                alert = QMessageBox()
+                alert.setText("Matter marked to be deleted.  The next database cleanup cycle will delete this matter permanently. \nThis matter window will now be closed.")
+                alert.setWindowTitle('Complete.')
+                alert.exec_()
+                self.changes = False
+                self.close()
+        else:
+            reply = QMessageBox.question(self, 'Reverse Deletion', 'Would you like to unflag this matter for deletion?', QMessageBox.Yes, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                data = {'action': 'update',
+                        'table': 'ClientMatters',
+                        'values': {'[Delete]': str(0)
+                                   },
+                        'params': {'ClientNum':self.ui.clientNum.text(),
+                                   'MatterNum':self.ui.matterNum.text()
+                                   }
+                        }
+
+                CONN.connect()
+                CONN.saveData(data)
+                CONN.closecnxn()
+
+                self.client.listMatters()
+                self.reload_matter()
+
+                alert = QMessageBox()
+                alert.setText("Delete flag cleared.")
+                alert.setWindowTitle('Complete.')
+                alert.exec_()
+
+
+    def reload_matter(self):
+        self.matter = MtrFuncs.get_client_matter(self.ui.clientNum.text(), self.ui.matterNum.text())
+        self.loadMatter()
             
     def loadStates(self ):
         

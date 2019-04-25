@@ -92,7 +92,8 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
     
     def unlockWindow(self ):
         for i in dir(self.ui):
-            exec("""self.setLocks(self.ui.{},False)
+            if i != 'delete_matter' or (self.client.activeUser.admin == 1):
+                exec("""self.setLocks(self.ui.{},False)
     """.format( i ))
         
     def setLocks(self,widget,locked):

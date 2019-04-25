@@ -226,6 +226,7 @@ class UserManager(QtGui.QFrame):
             self.ui.fullName.clear()
             self.ui.lastSignin.clear()
             self.ui.admin.setCheckState(0)
+            self.ui.admin.orig = 0
             self.ui.inactive.setCheckState(0)
             
             self.changes = False
@@ -261,8 +262,7 @@ class UserManager(QtGui.QFrame):
             alert.setText("Set your password before saving.")
             alert.exec_()
             return
-            
-            
+
         data = {'action':self.action,
                 'table':'UserParam',
                 'values':{'Password':password,

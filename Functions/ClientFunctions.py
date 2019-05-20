@@ -55,9 +55,9 @@ def listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, cont
     CONN.connect()
     data = CONN.readData(q,v)
     CONN.closecnxn()
-
-    for r, i in enumerate(data.index):
-        yield r, data.loc[i]
+    return data
+    # for r, i in enumerate(data.index):
+    #     yield r, data.loc[i]
         
 def getNextClientNum():
     q = "SELECT MAX(ClientNum) +1  as nextnum FROM [NortonAbert].[dbo].ClientInfo"

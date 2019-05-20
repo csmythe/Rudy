@@ -8,6 +8,8 @@ from difflib import get_close_matches
 # from os import getcwd
 from datetime import datetime as dt
 from pandas import DataFrame
+from time import time
+from math import ceil
 
 class MainMatterScreen(QtGui.QMainWindow):
     def __init__(self, app):
@@ -25,13 +27,15 @@ class MainMatterScreen(QtGui.QMainWindow):
         self.activeUser = None
         self.changes = False
         self.action = None
+        self.page_length = 100
+
         self.lockFields()
         self.loadStates()
         self.listClients()
         
         
         for i in dir(self.ui):
-            if i != 'showInactive' and i not in ['searchFirst','searchLast','searchAddr', 'searchCity','searchState','searchContacts','seeDeleted','includeDeteled']:
+            if i != 'showInactive' and i not in ['searchFirst','searchLast','searchAddr', 'searchCity','searchState','searchContacts','seeDeleted','includeDeteled', 'page_num','next_page','prev_page']:
                 exec("initializeChangeTracking(self,self.ui.{})".format(i))
         
         self.ui.actionManage_Matter_Types.triggered.connect(partial( self.openManager, MatterManager))
@@ -48,6 +52,9 @@ class MainMatterScreen(QtGui.QMainWindow):
         self.ui.search.clicked.connect(self.listClients)
         self.ui.deleteAccount.clicked.connect(self.deleteClient)
         self.ui.includeDeteled.stateChanged.connect(self.listMatters)
+        self.ui.next_page.clicked.connect(partial(self._nav_pages,1))
+        self.ui.prev_page.clicked.connect(partial(self._nav_pages,-1))
+        self.ui.page_num.currentIndexChanged.connect(self.load_client_list)
         
         
     def resetFilters(self):
@@ -327,7 +334,17 @@ class MainMatterScreen(QtGui.QMainWindow):
                 self.listClients()
                 self.lockFields()
                 self.ui.addMatter.setEnabled(True)
-                
+
+    def _nav_pages(self, direction):
+        page = self.ui.page_num.currentIndex() + direction
+        if page < 0:
+            page = 0
+        elif page > self.ui.page_num.count() - 1:
+            page = self.ui.page_num.count() - 1
+
+        self.ui.page_num.setCurrentIndex(page)
+
+
     def listClients(self):
         firstNames = self.ui.searchFirst.text()
         lastNames = self.ui.searchLast.text()
@@ -338,13 +355,40 @@ class MainMatterScreen(QtGui.QMainWindow):
         
         deleted = self.ui.seeDeleted.checkState() == 2
         cws = [60,115,125,75,35,50]
+
         for c, w in enumerate(cws):
             self.ui.clientList.setColumnWidth(c,w)
-        
+
+        data = ClntFuncs.listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, contactFilters, deleted)
+
+        self.ui.page_num.clear()
+        total_pages = ceil(len(data) / self.page_length)
+        self.ui.total_pages.setText('Of {} Pages'.format(str(total_pages)))
+        for i in range(total_pages):
+            min_limit = self.page_length * i
+            max_limit = self.page_length * (i+1) - 1
+
+            sub_set = data.loc[min_limit:max_limit]
+
+            self.ui.page_num.addItem(str(i +1))
+            self.ui.page_num.setItemData(i, sub_set)
+
+        self.ui.page_num.setCurrentIndex(0)
+        self.load_client_list(0)
+
+
+    def load_client_list(self, index):
+
+        self.min = self.page_length * index
+        self.max = self.page_length * (index + 1)
+
+        total_data = self.ui.page_num.itemData(index)
+        page_data = total_data.loc[self.min:self.max]
         self.ui.clientList.setRowCount(0)
-        
-        for r, data in ClntFuncs.listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, contactFilters, deleted):
-            
+
+        t0 = time()
+        for r, i in enumerate(page_data.index):
+            data = page_data.loc[i]
             self.ui.clientList.insertRow(r)
             self.ui.clientList.setRowHeight(r,20)
             
@@ -357,6 +401,9 @@ class MainMatterScreen(QtGui.QMainWindow):
                     QtGui.QLabel(data.state),
                     QtGui.QLabel(data.zipcode)]
             populateTableRow(self.ui.clientList, r, cols)
+
+        t1 = time()
+        print('Time: {:2f} Sec'.format(t1 - t0))
             
     def loadClientRow(self,row,col):
         reply = checkChangesMade(self)

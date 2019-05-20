@@ -460,7 +460,7 @@ class MainMatterScreen(QtGui.QMainWindow):
             self.ui.matterList.insertRow(r)
             matterLabel = QtGui.QLabel("{}.{}".format(str(self.data.clientnum),str(data.matternum)))
             matterLabel.data = data
-            if data.dateclosed is not None:
+            if data.dateclosed is not None and data.dateclosed > dt(1900, 1, 1, 0, 0, 0).date():
                 closed = 'Yes'
             else:
                 closed = 'No'

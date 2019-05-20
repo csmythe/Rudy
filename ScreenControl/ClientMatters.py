@@ -133,9 +133,9 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         matterindex = self.ui.matterType.findData(int(self.matter.mattertypeid))
         if matterindex > 0:
             self.ui.matterType.setCurrentIndex(matterindex)
-            
+        print(self.matter.dateclosed, self.ui.dateClosed.date().toPyDate())
         self.ui.dateOpened.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateopened),"%Y-%m-%d")))
-        if self.matter.dateclosed is not None:
+        if self.matter.dateclosed is not None and self.matter.dateclosed > self.ui.dateClosed.minimumDate().toPyDate():
             self.ui.closed.setCheckState(2)
             self.ui.dateClosed.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")))
             self.ui.boxNumber.setText(self.matter.boxnumber)
@@ -189,7 +189,7 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         
     def closeMatter(self,state):
         if state ==2:
-            if self.matter.dateclosed is None:
+            if self.matter.dateclosed is None or self.ui.dateClosed.minimumDate().toPyDate() >= self.matter.dateclosed:
                 closeDate = dt.today().date()
             else:
                 closeDate = dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")
@@ -205,6 +205,7 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
                 else:
                     self.ui.closed.setCheckState(2)
                     closeDate = dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")
+
         self.ui.dateClosed.setDate(QtCore.QDate(closeDate))
         
     def listDocuments(self):
@@ -476,10 +477,9 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
                               },
                     'params':{}
                     }
-            
-            if self.ui.dateClosed.date().toPyDate() > self.ui.dateClosed.minimumDate().toPyDate():
-                data['values']['DateClosed'] = str(self.ui.dateClosed.date().toPyDate())
-                data['values']['BoxNumber'] = self.ui.boxNumber.text()
+
+            data['values']['DateClosed'] = str(self.ui.dateClosed.date().toPyDate())
+            data['values']['BoxNumber'] = self.ui.boxNumber.text()
                 
             if self.action == 'new':
                 key = 'values'

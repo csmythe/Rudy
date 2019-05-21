@@ -4,7 +4,7 @@ from functools import partial
 def checkChangesMade(cls):
     if cls.changes == True:
         reply = QtWidgets.QMessageBox.question(cls, "Save Changes?", "Would you like to save your changes?"
-                                           ,QtGui.QMessageBox.Yes, QtGui.QMessageBox.No, QtGui.QMessageBox.Cancel)
+                                           ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
         if reply == QtWidgets.QMessageBox.Yes:
             cls.saveChanges()
             cls.changes = False

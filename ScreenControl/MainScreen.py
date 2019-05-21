@@ -11,10 +11,10 @@ from pandas import DataFrame
 from time import time
 from math import ceil
 
-class MainMatterScreen(QtGui.QMainWindow):
+class MainMatterScreen(QtWidgets.QMainWindow):
     def __init__(self, app):
 
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.ui = loadUi("MainWindow", self)
 
         self.ui.addClient.setIcon(QtGui.QIcon(addIcon))
@@ -193,10 +193,10 @@ class MainMatterScreen(QtGui.QMainWindow):
                 nameDisplay.append(disp)
                 
             names = "\n".join(nameDisplay)
-            reply = QtGui.QMessageBox.question(self, "Matching Names?", "The following names are possible adverse party matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
-                                               ,QtGui.QMessageBox.Yes, QtGui.QMessageBox.No, QtGui.QMessageBox.Cancel)
+            reply = QtWidgets.QMessageBox.question(self, "Matching Names?", "The following names are possible adverse party matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
+                                               ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
             
-            if reply == QtGui.QMessageBox.Yes:
+            if reply == QtWidgets.QMessageBox.Yes:
                 return False
             else:
                 return True
@@ -234,10 +234,10 @@ class MainMatterScreen(QtGui.QMainWindow):
         if len(dupeDisp) > 0:
                
             names = "\n".join(dupeDisp)
-            reply = QtGui.QMessageBox.question(self, "Matching Names?", "The following names or address are possible duplicate matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
-                                               ,QtGui.QMessageBox.Yes, QtGui.QMessageBox.No, QtGui.QMessageBox.Cancel)
+            reply = QtWidgets.QMessageBox.question(self, "Matching Names?", "The following names or address are possible duplicate matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
+                                               ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
             
-            if reply == QtGui.QMessageBox.Yes:
+            if reply == QtWidgets.QMessageBox.Yes:
                 return False
             else:
                 return True
@@ -249,13 +249,13 @@ class MainMatterScreen(QtGui.QMainWindow):
         if self.action == 'update':
             if self.ui.deleteAccount.delAction == '0':
                 
-                reply = QtGui.QMessageBox.question(self, 'Restore Account', 'Do you want to restore this account from the deleted group?',
-                                                   QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                reply = QtWidgets.QMessageBox.question(self, 'Restore Account', 'Do you want to restore this account from the deleted group?',
+                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
             else:
-                reply = QtGui.QMessageBox.question(self, 'Delete Account', 'Do you want to delete this account?',
-                                                   QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
+                reply = QtWidgets.QMessageBox.question(self, 'Delete Account', 'Do you want to delete this account?',
+                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
 
-            if reply == QtGui.QMessageBox.Yes:        
+            if reply == QtWidgets.QMessageBox.Yes:        
                 if self.ui.deleteAccount.actionDate is None:
                     self.ui.deleteAccount.actionDate = ''                              
                 data = {'action':self.action,
@@ -286,13 +286,13 @@ class MainMatterScreen(QtGui.QMainWindow):
                 return
             
             if self.ui.clientNum.text().strip() == '':
-                alert = QtGui.QMessageBox()
+                alert = QtWidgets.QMessageBox()
                 alert.setWindowTitle('Missing Client #')
                 alert.setText("Enter Client Number Before Saving")
                 alert.exec_()
                 return
             elif self.ui.state.currentIndex() == 0:
-                alert = QtGui.QMessageBox()
+                alert = QtWidgets.QMessageBox()
                 alert.setWindowTitle('Missing State')
                 alert.setText("Select a state before saving")
                 alert.exec_()
@@ -392,14 +392,14 @@ class MainMatterScreen(QtGui.QMainWindow):
             self.ui.clientList.insertRow(r)
             self.ui.clientList.setRowHeight(r,20)
             
-            clientlabel = QtGui.QLabel(str(data.clientnum))
+            clientlabel = QtWidgets.QLabel(str(data.clientnum))
             clientlabel.cdata = data
             cols = [clientlabel,
-                    QtGui.QLabel("{0}, {1}".format(data.lastname.strip(),data.firstname.strip()) ),
-                    QtGui.QLabel(data.address1),
-                    QtGui.QLabel(data.city),
-                    QtGui.QLabel(data.state),
-                    QtGui.QLabel(data.zipcode)]
+                    QtWidgets.QLabel("{0}, {1}".format(data.lastname.strip(),data.firstname.strip()) ),
+                    QtWidgets.QLabel(data.address1),
+                    QtWidgets.QLabel(data.city),
+                    QtWidgets.QLabel(data.state),
+                    QtWidgets.QLabel(data.zipcode)]
             populateTableRow(self.ui.clientList, r, cols)
 
         t1 = time()
@@ -458,22 +458,22 @@ class MainMatterScreen(QtGui.QMainWindow):
         self.ui.matterList.setRowCount(0)
         for r, data in MtrFuncs.generateClientMatters(self.data.clientnum, self.ui.includeDeteled.checkState() == 2):
             self.ui.matterList.insertRow(r)
-            matterLabel = QtGui.QLabel("{}.{}".format(str(self.data.clientnum),str(data.matternum)))
+            matterLabel = QtWidgets.QLabel("{}.{}".format(str(self.data.clientnum),str(data.matternum)))
             matterLabel.data = data
             if data.dateclosed is not None and data.dateclosed > dt(1900, 1, 1, 0, 0, 0).date():
                 closed = 'Yes'
             else:
                 closed = 'No'
                 
-            viewMatter = QtGui.QToolButton()
+            viewMatter = QtWidgets.QToolButton()
             viewMatter.setText('View')
             viewMatter.clicked.connect(partial(self.openMatterWindow, data))
 
             cols = [matterLabel,
-                    QtGui.QLabel(data.matterdescr),
-                    QtGui.QLabel(data.attorneyinitials),
-                    QtGui.QLabel(str(data.dateopened)),
-                    QtGui.QLabel(closed),
+                    QtWidgets.QLabel(data.matterdescr),
+                    QtWidgets.QLabel(data.attorneyinitials),
+                    QtWidgets.QLabel(str(data.dateopened)),
+                    QtWidgets.QLabel(closed),
                     viewMatter
                     ]
             

@@ -1,6 +1,6 @@
 
 # from UI.Icons_rc import *
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.LogIn import Ui_LogIn
 from UI.MainWindow import Ui_MainWindow
 from UI.ManageMatters import Ui_ManageMatters
@@ -9,6 +9,8 @@ from UI.MatterWindow import Ui_MatterWindow
 from UI.ReportWindow import Ui_ReportFrame
 from UI.FileMaintenance import Ui_FileMaint
 # import os
+
+
 
 UIDir = '.\\UI'
 icoDir = UIDir+'\\Icons\\'

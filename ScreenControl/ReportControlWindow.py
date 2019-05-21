@@ -6,10 +6,10 @@ from subprocess import Popen
 import os
 from getpass import getuser
 
-class ReportingControls(QtGui.QFrame):
+class ReportingControls(QtWidgets.QFrame):
     
     def __init__(self):
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.ui = loadUi('ReportWindow', self)
         
         self.ui.runReport.setIcon(QtGui.QIcon(searchIcon))
@@ -50,29 +50,29 @@ class ReportingControls(QtGui.QFrame):
         
         for data in tableData:
             table, columns, alias = data[0], data[1], data[2]
-            displayTopItem = QtGui.QTreeWidgetItem()
+            displayTopItem = QtWidgets.QTreeWidgetItem()
             displayTopItem.setText(0,table)
             
             self.ui.displayCols.addTopLevelItem(displayTopItem)
             
-            filterTopItem = QtGui.QTreeWidgetItem()
+            filterTopItem = QtWidgets.QTreeWidgetItem()
             filterTopItem.setText(0,table)
             
             self.ui.availableFilters.addTopLevelItem(filterTopItem)
             
             for col in columns:
                 
-                dispItem = QtGui.QTreeWidgetItem(displayTopItem)
-                dispSelection = QtGui.QCheckBox(col)
+                dispItem = QtWidgets.QTreeWidgetItem(displayTopItem)
+                dispSelection = QtWidgets.QCheckBox(col)
                 displayTopItem.addChild(dispItem)
                 self.ui.displayCols.setItemWidget(dispItem, 0, dispSelection)
                 dispSelection.clicked.connect(partial(self.alterColumnHeaders, col, alias, dispItem))
                 
-                addFilter = QtGui.QToolButton()
+                addFilter = QtWidgets.QToolButton()
                 addFilter.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
                 addFilter.setIcon(QtGui.QIcon(addIcon))
                 addFilter.setText(col)
-                filtItem = QtGui.QTreeWidgetItem(filterTopItem)
+                filtItem = QtWidgets.QTreeWidgetItem(filterTopItem)
                 filterTopItem.addChild(filtItem)
                 self.ui.availableFilters.setItemWidget(filtItem,0,addFilter)
                 addFilter.clicked.connect(partial(self.addFilter, col, alias))
@@ -82,9 +82,9 @@ class ReportingControls(QtGui.QFrame):
         selection = '{}.{}'.format(alias,colName)
         
         if self.reporting:
-            reply = QtGui.QMessageBox.question(self, 'Currently Reporting', 'Altering the report columns will clear the report.  Do you want to continue?',
-                                               QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-            if reply == QtGui.QMessageBox.No:
+            reply = QtWidgets.QMessageBox.question(self, 'Currently Reporting', 'Altering the report columns will clear the report.  Do you want to continue?',
+                                               QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+            if reply == QtWidgets.QMessageBox.No:
                 self.ui.displayCols.itemWidget(item, 0).setCheckState(2)
                 return
             else:
@@ -103,7 +103,7 @@ class ReportingControls(QtGui.QFrame):
         self.ui.reportResults.setColumnCount(len(self.columns))
         
         for c, col in enumerate(self.columns):
-            self.ui.reportResults.setHorizontalHeaderItem(c, QtGui.QTableWidgetItem(col))
+            self.ui.reportResults.setHorizontalHeaderItem(c, QtWidgets.QTableWidgetItem(col))
             
         
     def addFilter(self,colName,alias):
@@ -112,12 +112,12 @@ class ReportingControls(QtGui.QFrame):
         
         removeMe = Deleter(self, row)
         
-        label = QtGui.QLabel(colName)
+        label = QtWidgets.QLabel(colName)
         label.selection = '{}.{}'.format(alias,colName)
         
         test = ReportTest()
         
-        value = QtGui.QLineEdit()
+        value = QtWidgets.QLineEdit()
         
         cols = [removeMe, label, test, value]
         
@@ -153,7 +153,7 @@ class ReportingControls(QtGui.QFrame):
             self.data = rFunc.runSearch(self.selections, filters, values)
             
             if len(self.data) == 0:
-                alert = QtGui.QMessageBox()
+                alert = QtWidgets.QMessageBox()
                 alert.setText('No Results Found')
                 alert.setWindowTitle("Empty Search")
                 alert.exec_()
@@ -165,7 +165,7 @@ class ReportingControls(QtGui.QFrame):
             for r, i in enumerate(self.data.index):
                 row = self.data.loc[i]
                 for c, col in enumerate(self.columns):
-                    itemWidget = QtGui.QLabel(str(row[col]))
+                    itemWidget = QtWidgets.QLabel(str(row[col]))
                     self.ui.reportResults.setCellWidget(r,c,itemWidget)
                     
                 
@@ -196,26 +196,26 @@ class ReportingControls(QtGui.QFrame):
             
             Popen([filename], shell=True)
             
-class ReportFilter(QtGui.QFrame):
+class ReportFilter(QtWidgets.QFrame):
     
     def __init__(self, parent, columnName, item, alias):
-        QtGui.QFrame.__init__(self)
-        self.layout = QtGui.QHBoxLayout(self)
+        QtWidgets.QFrame.__init__(self)
+        self.layout = QtWidgets.QHBoxLayout(self)
         
         self.parent = parent
         self.item = item
         
-        self.removeMe = QtGui.QToolButton()
+        self.removeMe = QtWidgets.QToolButton()
         self.removeMe.setIcon(QtGui.QIcon(deleteIcon))
         
-        self.label = QtGui.QLabel(columnName)
+        self.label = QtWidgets.QLabel(columnName)
         self.label.selection = '{}.{}'.format(alias,columnName)
-        self.compareBox = QtGui.QComboBox()
+        self.compareBox = QtWidgets.QComboBox()
         compares = ['=','<>','>','>=','<','<=', 'LIKE','NOT LIKE']
         for i in compares:
             self.compareBox.addItem(i)
             
-        self.value = QtGui.QLineEdit()
+        self.value = QtWidgets.QLineEdit()
         
         self.layout.addWidget(self.removeMe)
         self.layout.addWidget(self.label)
@@ -229,9 +229,9 @@ class ReportFilter(QtGui.QFrame):
         taken = self.parent.ui.activeFilters.takeItem(row)
         del(taken)
         
-class Deleter(QtGui.QToolButton):
+class Deleter(QtWidgets.QToolButton):
     def __init__(self,parent,row):
-        QtGui.QToolButton.__init__(self)
+        QtWidgets.QToolButton.__init__(self)
         self.row = row
         self.parent = parent
         
@@ -246,10 +246,10 @@ class Deleter(QtGui.QToolButton):
         self.parent.removeFilter(self.row)
         
         
-class ReportTest(QtGui.QComboBox):
+class ReportTest(QtWidgets.QComboBox):
     
     def __init__(self):
-        QtGui.QComboBox.__init__(self)
+        QtWidgets.QComboBox.__init__(self)
         
         compares = [['Equal To','='],
                     ['Not Equal To','<>'],

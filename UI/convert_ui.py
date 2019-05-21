@@ -21,7 +21,7 @@ def convertUIFile():
     try:
         while True:
             path, uiFile, pyFile = yield
-            command = ["C:\\Python34\\Lib\\site-packages\\PyQt4\\pyuic4",
+            command = ["C:\\Python36\\Lib\\site-packages\\PyQt4\\pyuic4",
                        "{}\\{}".format(path, uiFile),
                        "-o",
                        "{}\\{}".format(path, pyFile)]
@@ -31,7 +31,7 @@ def convertUIFile():
 
 
 def cycleUIFiles(mypath):
-    os.chdir("C:\\Python34\\Lib\\site-packages\\PyQt4\\uic")
+    os.chdir("C:\\Python36\\Lib\\site-packages\\PyQt4\\uic")
     print(os.getcwd())
     for (dirpath, dirnames, filenames) in os.walk(mypath):
         for filename in filenames:
@@ -51,7 +51,7 @@ def refreshConversion(fName=''):
 
 def convert_to_py(ui_dir, file_name):
 
-    uic_command = r"pyuic4"
+    uic_command = r"python3 -m PyQt5.uic.pyuic"
     ui_file = file_name
     py_file = file_name.replace('.ui', '.py')
 

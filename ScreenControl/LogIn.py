@@ -1,15 +1,15 @@
 from UI import *
 from connectors.dbConnect import Connection
 
-class LogInScreen(QtGui.QFrame):
+class LogInScreen(QtWidgets.QFrame):
     def __init__(self,app):
         
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.ui = loadUi("LogIn",self)
         
-        self.actionLogIn = QtGui.QAction('AttemptLogin',self)
-        QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Enter),self,self.attemptLogIn)
-        QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Return),self,self.attemptLogIn)
+        self.actionLogIn = QtWidgets.QAction('AttemptLogin',self)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Enter),self,self.attemptLogIn)
+        QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Return),self,self.attemptLogIn)
         
         self.app = app
         self.ui.login.clicked.connect(self.attemptLogIn)
@@ -27,7 +27,7 @@ class LogInScreen(QtGui.QFrame):
             self.app.main.showMaximized()
             self.close()
         else:
-            alert = QtGui.QMessageBox()
+            alert = QtWidgets.QMessageBox()
             alert.setText("Wrong Username or Password.")
             alert.setWindowTitle("Login Failed")
             alert.exec_()

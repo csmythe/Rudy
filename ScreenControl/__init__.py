@@ -3,13 +3,13 @@ from functools import partial
 
 def checkChangesMade(cls):
     if cls.changes == True:
-        reply = QtGui.QMessageBox.question(cls, "Save Changes?", "Would you like to save your changes?"
+        reply = QtWidgets.QMessageBox.question(cls, "Save Changes?", "Would you like to save your changes?"
                                            ,QtGui.QMessageBox.Yes, QtGui.QMessageBox.No, QtGui.QMessageBox.Cancel)
-        if reply == QtGui.QMessageBox.Yes:
+        if reply == QtWidgets.QMessageBox.Yes:
             cls.saveChanges()
             cls.changes = False
             return 0
-        elif reply == QtGui.QMessageBox.Cancel:
+        elif reply == QtWidgets.QMessageBox.Cancel:
             return 1
         else:
             cls.changes = False
@@ -19,13 +19,13 @@ def checkChangesMade(cls):
         return 0
     
 def initializeChangeTracking(cls,widget):
-    if isinstance(widget,QtGui.QLineEdit):
+    if isinstance(widget,QtWidgets.QLineEdit):
         widget.textEdited.connect(partial(markAsChanged,cls))
-    elif isinstance(widget, QtGui.QCheckBox):
+    elif isinstance(widget, QtWidgets.QCheckBox):
         widget.clicked.connect(partial(markAsChanged,cls))
-    elif isinstance(widget, QtGui.QComboBox):
+    elif isinstance(widget, QtWidgets.QComboBox):
         widget.activated.connect(partial(markAsChanged,cls))
-    elif isinstance(widget, QtGui.QTextEdit):
+    elif isinstance(widget, QtWidgets.QTextEdit):
         widget.undoAvailable.connect(partial(markAsChanged,cls))
         
 
@@ -34,7 +34,7 @@ def markAsChanged(cls):
     
 def populateTableRow(table, r, cols):
     for c, col in enumerate(cols):
-        if isinstance(col, QtGui.QTableWidgetItem):
+        if isinstance(col, QtWidgets.QTableWidgetItem):
             table.setItem(r,c,col)
         else:
             table.setCellWidget(r,c,col)

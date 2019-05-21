@@ -6,12 +6,12 @@ from datetime import datetime as dt
 from subprocess import Popen
 from re import sub
 # from os import getcwd
-from PyQt4.Qt import QMessageBox
+from PyQt5.QtWidgets import QMessageBox
 
-class ClientMatter(QtGui.QMainWindow):
+class ClientMatter(QtWidgets.QMainWindow):
     def __init__(self, client, clientnum, matter = None):
         
-        QtGui.QMainWindow.__init__(self)
+        QtWidgets.QMainWindow.__init__(self)
         self.ui = loadUi("MatterWindow",self)
         
         for c, w in enumerate([50,150,100,50]):
@@ -52,7 +52,7 @@ class ClientMatter(QtGui.QMainWindow):
         for i in dir(self.ui):
             execStr = """
 widget = self.ui.{}
-if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.QDateEdit)):
+if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheckBox, QtWidgets.QDateEdit)):
     if (widget not in list([self.ui.apFirst,self.ui.apLast, self.ui.apMiddle, self.ui.reason,self.ui.setDirectory])): 
         initializeChangeTracking(self,widget)""".format(i)
             exec(execStr)
@@ -98,9 +98,9 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         
     def setLocks(self,widget,locked):
         
-        if isinstance(widget,QtGui.QLineEdit):
+        if isinstance(widget,QtWidgets.QLineEdit):
             widget.setReadOnly(locked)
-        elif isinstance(widget,(QtGui.QComboBox,QtGui.QDateEdit,QtGui.QToolButton, QtGui.QPushButton, QtGui.QCheckBox)):
+        elif isinstance(widget,(QtWidgets.QComboBox,QtWidgets.QDateEdit,QtWidgets.QToolButton, QtWidgets.QPushButton, QtWidgets.QCheckBox)):
             widget.setDisabled(locked)
             
     def newMatter(self , clientNum):
@@ -197,10 +197,10 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
             if self.matter.dateclosed is None:
                 closeDate = self.ui.dateClosed.minimumDate().toPyDate()
             else:
-                reply = QtGui.QMessageBox.question(self, 'Open Matter','This matter has been closed.  Do you want to re-open the matter?',
-                                                   QtGui.QMessageBox.Yes, QtGui.QMessageBox.No
+                reply = QtWidgets.QMessageBox.question(self, 'Open Matter','This matter has been closed.  Do you want to re-open the matter?',
+                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No
                                                 )
-                if reply == QtGui.QMessageBox.Yes:
+                if reply == QtWidgets.QMessageBox.Yes:
                     closeDate = self.ui.dateClosed.minimumDate().toPyDate()
                 else:
                     self.ui.closed.setCheckState(2)
@@ -215,24 +215,24 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         for r, data in docList:
             self.ui.documentList.insertRow(r)
             
-            delButton = QtGui.QToolButton()
+            delButton = QtWidgets.QToolButton()
             delButton.setIcon(QtGui.QIcon(deleteIcon))
             delButton.clicked.connect( partial(self.deleteAttachment, data.efiledir) )
             delButton.setToolTip('Delete Attachment')
             
-            viewButton = QtGui.QToolButton()
+            viewButton = QtWidgets.QToolButton()
             viewButton.setText('View')
             viewButton.clicked.connect( partial(self.viewAttachment, data.efiledir) )
             
             cols = [delButton
-                    , QtGui.QLabel(str(data.docname))
-                    , QtGui.QLabel(str(data.efiledir))
+                    , QtWidgets.QLabel(str(data.docname))
+                    , QtWidgets.QLabel(str(data.efiledir))
                     , viewButton]
             
             populateTableRow(self.ui.documentList, r, cols)
             
     def setMatterDirectory(self):
-        dirpath = QtGui.QFileDialog.getExistingDirectory(parent=self, caption='Set Matter Directory', directory='C:\\')
+        dirpath = QtWidgets.QFileDialog.getExistingDirectory(parent=self, caption='Set Matter Directory', directory='C:\\')
         
         if dirpath != '':
             self.save_dir_path_change(dirpath)
@@ -262,7 +262,7 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         currentDir = self.ui.currentDir.text()
         if currentDir == '':
             currentDir = 'C:\\'
-        fullPathNameList = QtGui.QFileDialog.getOpenFileNames(self,'Attach Document(s)',currentDir ) 
+        fullPathNameList = QtWidgets.QFileDialog.getOpenFileNames(self,'Attach Document(s)',currentDir ) 
         
         CONN.connect()
         for fullPathName in fullPathNameList:
@@ -285,9 +285,9 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         self.listDocuments()
         
     def deleteAttachment(self, path):
-        reply = QtGui.QMessageBox.question(self, 'Delete Attachment?', 'Would you like to delete this attachment (will not delete from hard drive)?',
-                                           QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-        if reply == QtGui.QMessageBox.Yes:
+        reply = QtWidgets.QMessageBox.question(self, 'Delete Attachment?', 'Would you like to delete this attachment (will not delete from hard drive)?',
+                                           QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
             data = {'action':'delete',
                     'table':'OriginalDocuments',
                     'values':{
@@ -312,12 +312,12 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
         for r, party in MtrFuncs.generateAdverPartyList(self.ui.clientNum.text(), self.ui.matterNum.text()):
             self.ui.partyList.insertRow(r)
             self.ui.partyList.setRowHeight(r,20)
-            firstnamelabel = QtGui.QLabel(party.firstname)
+            firstnamelabel = QtWidgets.QLabel(party.firstname)
             firstnamelabel.partyid = party.partyid
             cols = [firstnamelabel,
-                    QtGui.QLabel(party.middlename),
-                    QtGui.QLabel(party.lastname),
-                    QtGui.QLabel(party.reasondescription)]
+                    QtWidgets.QLabel(party.middlename),
+                    QtWidgets.QLabel(party.lastname),
+                    QtWidgets.QLabel(party.reasondescription)]
             
             populateTableRow(self.ui.partyList, r, cols)
     
@@ -429,7 +429,7 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
                 
     def saveChanges(self):
         
-        alert = QtGui.QMessageBox()
+        alert = QtWidgets.QMessageBox()
         if self.action is not None:
             if self.ui.matterNum == '':
                 alert.setText("Missing Matter Number")
@@ -614,5 +614,5 @@ if isinstance(widget,(QtGui.QLineEdit, QtGui.QComboBox, QtGui.QCheckBox, QtGui.Q
     def closeEvent(self, *args, **kwargs):
         reply = checkChangesMade(self)
         if reply == 0:
-            return QtGui.QMainWindow.closeEvent(self, *args, **kwargs)
+            return QtWidgets.QMainWindow.closeEvent(self, *args, **kwargs)
             

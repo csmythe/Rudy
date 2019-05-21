@@ -8,9 +8,9 @@ import packaging.version
 import packaging.requirements
 
 @demo
-class MainApp(QtGui.QApplication):
+class MainApp(QtWidgets.QApplication):
     def __init__(self, *args):
-        QtGui.QApplication.__init__(self, *args)
+        QtWidgets.QApplication.__init__(self, *args)
         
         self.main = MainMatterScreen(self)
         self.login = LogInScreen(self)

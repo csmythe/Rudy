@@ -1,13 +1,13 @@
 from UI import *
 from ScreenControl import *
 from Functions import UserFunctions as UsrFuncs, MatterFunctions as MtrFuncs, CONN
-from PyQt4.Qt import QListWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QListWidgetItem, QMessageBox
 import datetime as dt
 
 
-class MatterManager(QtGui.QFrame):
+class MatterManager(QtWidgets.QFrame):
     def __init__(self):
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.ui = loadUi("ManageMatters", self)
 #         
         self.ui.newMatter.setIcon(QtGui.QIcon(addIcon))
@@ -38,7 +38,7 @@ class MatterManager(QtGui.QFrame):
         self.ui.matterList.clear()
         for i in matterTypes.index:
             mType = matterTypes.loc[i]
-            matterLabel = QtGui.QLabel(mType.matterdescr)
+            matterLabel = QtWidgets.QLabel(mType.matterdescr)
             matterLabel.mType = mType
             item = QListWidgetItem()
             self.ui.matterList.addItem(item)
@@ -84,7 +84,7 @@ class MatterManager(QtGui.QFrame):
     def saveChanges(self):
         if self.action is not None:
             if self.ui.matterDescr.text().strip() == '':
-                alert = QtGui.QMessageBox()
+                alert = QtWidgets.QMessageBox()
                 alert.setWindowTitle("Missing Description")
                 alert.setText("Matter needs a description before saving.")
                 alert.exec_()
@@ -108,33 +108,33 @@ class MatterManager(QtGui.QFrame):
                 self.listMatters()
                 
         
-class Password(QtGui.QFrame):
+class Password(QtWidgets.QFrame):
     def __init__(self,usermgr,action):
         
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.usermgr = usermgr
         self.action = action
         
         self.setWindowTitle("Password")
         self.setWindowModality(QtCore.Qt.ApplicationModal)
         
-        self.layout = QtGui.QFormLayout(self)
+        self.layout = QtWidgets.QFormLayout(self)
         
-        self.password = QtGui.QLineEdit()
-        self.password.setEchoMode(QtGui.QLineEdit.Password)
+        self.password = QtWidgets.QLineEdit()
+        self.password.setEchoMode(QtWidgets.QLineEdit.Password)
         
-        self.confirm = QtGui.QLineEdit()
-        self.confirm.setEchoMode(QtGui.QLineEdit.Password)
+        self.confirm = QtWidgets.QLineEdit()
+        self.confirm.setEchoMode(QtWidgets.QLineEdit.Password)
         
-        self.hbox = QtGui.QHBoxLayout()
-        self.btnSavePassword = QtGui.QPushButton('Save')
-        self.btnCancelPassword = QtGui.QPushButton('Cancel')
+        self.hbox = QtWidgets.QHBoxLayout()
+        self.btnSavePassword = QtWidgets.QPushButton('Save')
+        self.btnCancelPassword = QtWidgets.QPushButton('Cancel')
         
         self.hbox.addWidget(self.btnSavePassword)
         self.hbox.addWidget(self.btnCancelPassword)
         
-        self.layout.addRow(QtGui.QLabel("Password: "),self.password)
-        self.layout.addRow(QtGui.QLabel("Confirm: "),self.confirm)
+        self.layout.addRow(QtWidgets.QLabel("Password: "),self.password)
+        self.layout.addRow(QtWidgets.QLabel("Confirm: "),self.confirm)
         self.layout.addRow(None,self.hbox)
         
         self.btnCancelPassword.clicked.connect(self.close)
@@ -142,7 +142,7 @@ class Password(QtGui.QFrame):
     
     def savePassword(self):
         if self.password.text() != self.confirm.text():
-            alert = QtGui.QMessageBox()
+            alert = QtWidgets.QMessageBox()
             alert.setWindowTitle("Password Mismatch")
             alert.setText("Your password does not match the confirmation. Please try again.")
             alert.exec_()
@@ -152,10 +152,10 @@ class Password(QtGui.QFrame):
             self.usermgr.changes = True
             self.close()
 
-class UserManager(QtGui.QFrame):
+class UserManager(QtWidgets.QFrame):
     def __init__(self):
         
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.ui = loadUi("ManageUsers", self)
 #         
         self.ui.newUser.setIcon(QtGui.QIcon(addIcon))
@@ -199,7 +199,7 @@ class UserManager(QtGui.QFrame):
         self.ui.userList.clear()
         for i in userListData.index:
             item = QListWidgetItem()
-            itemLabel = QtGui.QLabel(userListData.username[i])
+            itemLabel = QtWidgets.QLabel(userListData.username[i])
             itemLabel.data = userListData.loc[i]
         
             self.ui.userList.addItem(item)
@@ -241,7 +241,7 @@ class UserManager(QtGui.QFrame):
         
         checks = UsrFuncs.validateUserChange(username)
         
-        alert = QtGui.QMessageBox()
+        alert = QtWidgets.QMessageBox()
         if checks.usrchk[0] > 0 and self.action == 'new':
             alert.setWindowTitle('Invalid Username')
             alert.setText('Username Already Used')
@@ -306,9 +306,9 @@ class UserManager(QtGui.QFrame):
             self.ui.admin.origAdmin = int(userData.admin) * 2
             
 
-class CleanUp(QtGui.QFrame):
+class CleanUp(QtWidgets.QFrame):
     def __init__(self):
-        QtGui.QFrame.__init__(self)
+        QtWidgets.QFrame.__init__(self)
         self.ui = loadUi("FileMaintenance", self)
         
         self.ui.delDate.setDate(QtCore.QDate(dt.datetime.today().date() - dt.timedelta(days = 180)))
@@ -316,9 +316,9 @@ class CleanUp(QtGui.QFrame):
         self.ui.run.clicked.connect(self.startDeleting)
         
     def startDeleting(self):
-        reply = QtGui.QMessageBox.warning(self, "Caution: Deleting Permanently", "You are about to PERMANENTLY remove accounts and matters and ALL the related saved data.  Are you sure you want to continue?",
-                                          QtGui.QMessageBox.Yes, QtGui.QMessageBox.No)
-        if reply == QtGui.QMessageBox.Yes:
+        reply = QtWidgets.QMessageBox.warning(self, "Caution: Deleting Permanently", "You are about to PERMANENTLY remove accounts and matters and ALL the related saved data.  Are you sure you want to continue?",
+                                          QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+        if reply == QtWidgets.QMessageBox.Yes:
             delDate = self.ui.delDate.date().toPyDate()
             UsrFuncs.run_database_cleanup(delDate)
             alert = QMessageBox()

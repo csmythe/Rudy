@@ -2,32 +2,19 @@
 
 # Form implementation generated from reading ui file 'FileMaintenance.ui'
 #
-# Created by: PyQt4 UI code generator 4.12.1
+# Created by: PyQt5 UI code generator 5.12.2
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
 
 class Ui_FileMaint(object):
     def setupUi(self, FileMaint):
-        FileMaint.setObjectName(_fromUtf8("FileMaint"))
+        FileMaint.setObjectName("FileMaint")
         FileMaint.setWindowModality(QtCore.Qt.ApplicationModal)
         FileMaint.resize(346, 78)
-        FileMaint.setStyleSheet(_fromUtf8("\n"
+        FileMaint.setStyleSheet("\n"
 "QMainWindow#MainWindow{\n"
 "    \n"
 "    background-color:rgb(200, 200, 200);\n"
@@ -63,48 +50,50 @@ class Ui_FileMaint(object):
 "    color: rgb(202, 161, 56);\n"
 "    background-color: rgb(11, 56, 97);\n"
 "}\n"
-"QIcon{background-color:rga(1,1,1);}"))
-        FileMaint.setFrameShape(QtGui.QFrame.StyledPanel)
-        FileMaint.setFrameShadow(QtGui.QFrame.Raised)
-        self.verticalLayout = QtGui.QVBoxLayout(FileMaint)
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.label = QtGui.QLabel(FileMaint)
-        self.label.setStyleSheet(_fromUtf8("\n"
-"font: 75 12pt \"Microsoft Tai Le\";    "))
+"QIcon{background-color:rga(1,1,1);}")
+        FileMaint.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        FileMaint.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.verticalLayout = QtWidgets.QVBoxLayout(FileMaint)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.label = QtWidgets.QLabel(FileMaint)
+        self.label.setStyleSheet("\n"
+"font: 75 12pt \"Microsoft Tai Le\";    ")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName(_fromUtf8("label"))
+        self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label, 0, QtCore.Qt.AlignTop)
-        self.formLayout = QtGui.QFormLayout()
+        self.formLayout = QtWidgets.QFormLayout()
         self.formLayout.setVerticalSpacing(0)
-        self.formLayout.setObjectName(_fromUtf8("formLayout"))
-        self.label_2 = QtGui.QLabel(FileMaint)
-        self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label_2)
-        self.horizontalLayout = QtGui.QHBoxLayout()
+        self.formLayout.setObjectName("formLayout")
+        self.label_2 = QtWidgets.QLabel(FileMaint)
+        self.label_2.setObjectName("label_2")
+        self.formLayout.setWidget(0, QtWidgets.QFormLayout.LabelRole, self.label_2)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setContentsMargins(0, -1, -1, -1)
         self.horizontalLayout.setSpacing(0)
-        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-        self.delDate = QtGui.QDateEdit(FileMaint)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.delDate = QtWidgets.QDateEdit(FileMaint)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.delDate.sizePolicy().hasHeightForWidth())
         self.delDate.setSizePolicy(sizePolicy)
         self.delDate.setCalendarPopup(True)
-        self.delDate.setObjectName(_fromUtf8("delDate"))
+        self.delDate.setObjectName("delDate")
         self.horizontalLayout.addWidget(self.delDate)
-        self.run = QtGui.QToolButton(FileMaint)
-        self.run.setObjectName(_fromUtf8("run"))
+        self.run = QtWidgets.QToolButton(FileMaint)
+        self.run.setObjectName("run")
         self.horizontalLayout.addWidget(self.run)
-        self.formLayout.setLayout(0, QtGui.QFormLayout.FieldRole, self.horizontalLayout)
+        self.formLayout.setLayout(0, QtWidgets.QFormLayout.FieldRole, self.horizontalLayout)
         self.verticalLayout.addLayout(self.formLayout)
 
         self.retranslateUi(FileMaint)
         QtCore.QMetaObject.connectSlotsByName(FileMaint)
 
     def retranslateUi(self, FileMaint):
-        FileMaint.setWindowTitle(_translate("FileMaint", "File Maintenance", None))
-        self.label.setText(_translate("FileMaint", "Clean Up Deleted Accounts", None))
-        self.label_2.setText(_translate("FileMaint", "Clear up to:  ", None))
-        self.run.setText(_translate("FileMaint", "Run Clean Up", None))
+        _translate = QtCore.QCoreApplication.translate
+        FileMaint.setWindowTitle(_translate("FileMaint", "File Maintenance"))
+        self.label.setText(_translate("FileMaint", "Clean Up Deleted Accounts"))
+        self.label_2.setText(_translate("FileMaint", "Clear up to:  "))
+        self.run.setText(_translate("FileMaint", "Run Clean Up"))
+
 

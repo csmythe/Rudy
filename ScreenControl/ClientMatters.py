@@ -138,7 +138,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
 
         self.ui.dateOpened.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateopened),"%Y-%m-%d")))
 
-        if self.matter.dateclosed is not None and self.matter.dateclosed > self.ui.dateClosed.minimumDate().toPyDate():
+        if dt.strptime(str(self.matter.dateclosed if self.matter.dateclosed is not None else '1900-01-01'),"%Y-%m-%d").date() > self.ui.dateClosed.minimumDate().toPyDate():
             self.ui.closed.setCheckState(2)
             self.ui.dateClosed.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")))
             self.ui.boxNumber.setText(self.matter.boxnumber)
@@ -270,8 +270,8 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
         fullPathNameList = QtWidgets.QFileDialog.getOpenFileNames(self,'Attach Document(s)',currentDir ) 
         
         CONN.connect()
-        for fullPathName in fullPathNameList:
-                
+        for fullPathName in fullPathNameList[0]:
+            print(fullPathName)
             filename = fullPathName.split("/")[-1]
             if filename != '':
                 data = {'action':'new',

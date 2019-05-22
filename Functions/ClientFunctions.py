@@ -60,7 +60,7 @@ def listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, cont
     #     yield r, data.loc[i]
         
 def getNextClientNum():
-    q = "SELECT MAX(ClientNum) +1  as nextnum FROM [NortonAbert].[dbo].ClientInfo"
+    q = "SELECT ISNULL(MAX(ClientNum),0) +1  as nextnum FROM [NortonAbert].[dbo].ClientInfo"
     CONN.connect()
     data = CONN.readData(q,[])
     CONN.closecnxn()

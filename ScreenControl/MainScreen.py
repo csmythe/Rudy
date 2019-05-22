@@ -169,7 +169,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             self.action = 'new'
             self.unlockFields()
             clientnum = ClntFuncs.getNextClientNum()
-            
+            # clientnum = 1 if clientnum is None else clientnum
             if len(clientnum) > 0:
                 self.ui.clientNum.setText(str(clientnum.nextnum[0]))
             else:
@@ -371,13 +371,12 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         data = ClntFuncs.listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, contactFilters, deleted)
 
         self.ui.page_num.clear()
-        total_pages = ceil(len(data) / self.page_length)
+        total_pages = ceil(len(data) / self.page_length) if len(data) > 0 else 1
         self.ui.total_pages.setText('Of {} Pages'.format(str(total_pages)))
         for i in range(total_pages):
             min_limit = self.page_length * i
             max_limit = self.page_length * (i+1) - 1
-
-            sub_set = data.loc[min_limit:max_limit]
+            sub_set = data.iloc[min_limit:max_limit]  if len(data) > 0 else None
 
             self.ui.page_num.addItem(str(i +1))
             self.ui.page_num.setItemData(i, sub_set)
@@ -391,8 +390,9 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.min = self.page_length * index
         self.max = self.page_length * (index + 1)
 
-        total_data = self.ui.page_num.itemData(index)
-        page_data = total_data.loc[self.min:self.max]
+        page_data = self.ui.page_num.itemData(index)
+        if page_data is None:
+            return
         self.ui.clientList.setRowCount(0)
 
         for r, i in enumerate(page_data.index):
@@ -466,7 +466,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             self.ui.matterList.insertRow(r)
             matterLabel = Label.create_label("{}.{}".format(str(self.data.clientnum),str(data.matternum)),MainMatterScreen.matter_list_widths[0])
             matterLabel.data = data
-            if data.dateclosed is not None and data.dateclosed > dt(1900, 1, 1, 0, 0, 0).date():
+            if dt.strptime(str(data.dateclosed if data.dateclosed is not None else '1900-01-01'),"%Y-%m-%d") > dt(1900, 1, 1, 0, 0, 0):
                 closed = 'Yes'
             else:
                 closed = 'No'

@@ -3,11 +3,11 @@ from ScreenControl.MainScreen import MainMatterScreen
 from ScreenControl.LogIn import LogInScreen
 from connectors import *
 import sys
-import packaging
-import packaging.version
-import packaging.requirements
+# import packaging
+# import packaging.version
+# import packaging.requirements
 
-@demo
+# @demo
 class MainApp(QtWidgets.QApplication):
     def __init__(self, *args):
         QtWidgets.QApplication.__init__(self, *args)

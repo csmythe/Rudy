@@ -1,14 +1,14 @@
 # -*- mode: python -*-
 block_cipher = None
-
-datas = [('./UI/Icons/*.ico','./UI/Icons'),
-#('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\platforms\\qwindows.dll','.'),
-#('C:\\Python34\\Lib\\site-packages\\PyQt4\\libEGL.dll','.'),
-#('C:\\Python34\\Lib\\site-packages\\PyQt4\\plugins\\imageformats\\qico.dll','.\\imageformats'),
+qt_dlls_path = r'C:\Users\DevComp900.1\PyQt4dlls'
+datas = [(r'.\UI\Icons\*.ico',r'.\UI\Icons'),
+(r'{}\qwindows.dll'.format(qt_dlls_path),'.'),
+(r'{}\libEGL.dll'.format(qt_dlls_path),'.'),
+(r'{}\qico.dll'.format(qt_dlls_path),r'.\imageformats'),
 ]
 
 a = Analysis(['Rudy.py'],
-             pathex=[r'/home/csmythe/PycharmProjects/Rudy'],
+             pathex=[r'C:\Users\DevComp900.1\PycharmProjects\Rudy'],
              binaries=None,
              datas=datas,
              hiddenimports=[],
@@ -32,7 +32,7 @@ exe = EXE(pyz,
           upx=False,
           window =True ,
           console = True,          
-          icon = './UI/Icons/RUDYicon.ico')
+          icon = r'.\UI\Icons\RUDYicon.ico')
           
 coll = COLLECT(exe,
                a.binaries,

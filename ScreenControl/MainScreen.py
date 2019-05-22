@@ -12,6 +12,10 @@ from time import time
 from math import ceil
 
 class MainMatterScreen(QtWidgets.QMainWindow):
+
+    client_list_widths = [60,115,125,75,35,50]
+    matter_list_widths = [75,150,150,100,100]
+
     def __init__(self, app):
 
         QtWidgets.QMainWindow.__init__(self)
@@ -32,6 +36,11 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.lockFields()
         self.loadStates()
         self.listClients()
+
+        for c,w in enumerate(MainMatterScreen.client_list_widths): self.ui.clientList.setColumnWidth(c,w)
+        for c,w in enumerate(MainMatterScreen.matter_list_widths): self.ui.matterList.setColumnWidth(c,w)
+
+
         
         
         for i in dir(self.ui):
@@ -54,7 +63,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.ui.includeDeteled.stateChanged.connect(self.listMatters)
         self.ui.next_page.clicked.connect(partial(self._nav_pages,1))
         self.ui.prev_page.clicked.connect(partial(self._nav_pages,-1))
-        self.ui.page_num.currentIndexChanged.connect(self.load_client_list)
+        self.ui.page_num.activated.connect(self.load_client_list)
         
         
     def resetFilters(self):
@@ -356,7 +365,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         deleted = self.ui.seeDeleted.checkState() == 2
         cws = [60,115,125,75,35,50]
 
-        for c, w in enumerate(cws):
+        for c, w in enumerate(MainMatterScreen.client_list_widths):
             self.ui.clientList.setColumnWidth(c,w)
 
         data = ClntFuncs.listClients(firstNames, lastNames, addrFilter, cityFilter, stateFilter, contactFilters, deleted)
@@ -386,25 +395,22 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         page_data = total_data.loc[self.min:self.max]
         self.ui.clientList.setRowCount(0)
 
-        t0 = time()
         for r, i in enumerate(page_data.index):
             data = page_data.loc[i]
             self.ui.clientList.insertRow(r)
             self.ui.clientList.setRowHeight(r,20)
             
-            clientlabel = QtWidgets.QLabel(str(data.clientnum))
+            clientlabel = Label.create_label(str(data.clientnum), MainMatterScreen.client_list_widths[0])
             clientlabel.cdata = data
+
             cols = [clientlabel,
-                    QtWidgets.QLabel("{0}, {1}".format(data.lastname.strip(),data.firstname.strip()) ),
-                    QtWidgets.QLabel(data.address1),
-                    QtWidgets.QLabel(data.city),
-                    QtWidgets.QLabel(data.state),
-                    QtWidgets.QLabel(data.zipcode)]
+                    Label.create_label("{0}, {1}".format(data.lastname.strip(),data.firstname.strip()), MainMatterScreen.client_list_widths[1]),
+                    Label.create_label(data.address1, MainMatterScreen.client_list_widths[2]),
+                    Label.create_label(data.city, MainMatterScreen.client_list_widths[3]),
+                    Label.create_label(data.state, MainMatterScreen.client_list_widths[4]),
+                    Label.create_label(data.zipcode, MainMatterScreen.client_list_widths[5])]
             populateTableRow(self.ui.clientList, r, cols)
 
-        t1 = time()
-        print('Time: {:2f} Sec'.format(t1 - t0))
-            
     def loadClientRow(self,row,col):
         reply = checkChangesMade(self)
         if reply == 0:
@@ -458,7 +464,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.ui.matterList.setRowCount(0)
         for r, data in MtrFuncs.generateClientMatters(self.data.clientnum, self.ui.includeDeteled.checkState() == 2):
             self.ui.matterList.insertRow(r)
-            matterLabel = QtWidgets.QLabel("{}.{}".format(str(self.data.clientnum),str(data.matternum)))
+            matterLabel = Label.create_label("{}.{}".format(str(self.data.clientnum),str(data.matternum)),MainMatterScreen.matter_list_widths[0])
             matterLabel.data = data
             if data.dateclosed is not None and data.dateclosed > dt(1900, 1, 1, 0, 0, 0).date():
                 closed = 'Yes'
@@ -470,10 +476,10 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             viewMatter.clicked.connect(partial(self.openMatterWindow, data))
 
             cols = [matterLabel,
-                    QtWidgets.QLabel(data.matterdescr),
-                    QtWidgets.QLabel(data.attorneyinitials),
-                    QtWidgets.QLabel(str(data.dateopened)),
-                    QtWidgets.QLabel(closed),
+                    Label.create_label(data.matterdescr,MainMatterScreen.matter_list_widths[1]),
+                    Label.create_label(data.attorneyinitials,MainMatterScreen.matter_list_widths[2]),
+                    Label.create_label(str(data.dateopened),MainMatterScreen.matter_list_widths[3]),
+                    Label.create_label(closed,MainMatterScreen.matter_list_widths[4]),
                     viewMatter
                     ]
             

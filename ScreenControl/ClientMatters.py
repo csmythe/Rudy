@@ -1,7 +1,7 @@
 from UI import *
 from Functions import MatterFunctions as MtrFuncs,CONN, ClientFunctions as ClntFuncs
 from ScreenControl import *
-
+import pprint
 from datetime import datetime as dt
 from subprocess import Popen
 from re import sub
@@ -52,7 +52,7 @@ class ClientMatter(QtWidgets.QMainWindow):
         for i in dir(self.ui):
             execStr = """
 widget = self.ui.{}
-if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheckBox, QtWidgets.QDateEdit)):
+if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QSpinBox, QtWidgets.QComboBox, QtWidgets.QCheckBox, QtWidgets.QDateEdit)):
     if (widget not in list([self.ui.apFirst,self.ui.apLast, self.ui.apMiddle, self.ui.reason,self.ui.setDirectory])): 
         initializeChangeTracking(self,widget)""".format(i)
             exec(execStr)
@@ -100,7 +100,7 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
         
         if isinstance(widget,QtWidgets.QLineEdit):
             widget.setReadOnly(locked)
-        elif isinstance(widget,(QtWidgets.QComboBox,QtWidgets.QDateEdit,QtWidgets.QToolButton, QtWidgets.QPushButton, QtWidgets.QCheckBox)):
+        elif isinstance(widget,(QtWidgets.QComboBox, QtWidgets.QSpinBox, QtWidgets.QDoubleSpinBox,QtWidgets.QDateEdit,QtWidgets.QToolButton, QtWidgets.QPushButton, QtWidgets.QCheckBox)):
             widget.setDisabled(locked)
             
     def newMatter(self , clientNum):
@@ -128,13 +128,16 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
         self.lockWindow()
         self.ui.clientNum.setText(str(self.matter.clientnum))
         self.ui.matterNum.setText(str(self.matter.matternum))
-        
+
         self.ui.attorneyInitials.setText(self.matter.attorneyinitials)
+        self.ui.assets.setValue(float(self.matter.estateassets))
+
         matterindex = self.ui.matterType.findData(int(self.matter.mattertypeid))
         if matterindex > 0:
             self.ui.matterType.setCurrentIndex(matterindex)
-        print(self.matter.dateclosed, self.ui.dateClosed.date().toPyDate())
+
         self.ui.dateOpened.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateopened),"%Y-%m-%d")))
+
         if self.matter.dateclosed is not None and self.matter.dateclosed > self.ui.dateClosed.minimumDate().toPyDate():
             self.ui.closed.setCheckState(2)
             self.ui.dateClosed.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")))
@@ -156,9 +159,8 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
        
         if self.matter.matterdir is not None:
             self.ui.currentDir.setText(self.matter.matterdir)
-            
-            
-        
+
+
         stateindex = self.ui.billState.findData(self.matter.billingstate)
         if stateindex > 0:
             self.ui.billState.setCurrentIndex(stateindex)
@@ -210,7 +212,10 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
         
     def listDocuments(self):
         docList = MtrFuncs.generateDocumentList(self.ui.clientNum.text(), self.ui.matterNum.text())
-        
+        col_widths = [75,150,150,50]
+
+        for c,w in enumerate(col_widths): self.ui.documentList.setColumnWidth(c,w)
+
         self.ui.documentList.setRowCount(0)
         for r, data in docList:
             self.ui.documentList.insertRow(r)
@@ -225,8 +230,8 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
             viewButton.clicked.connect( partial(self.viewAttachment, data.efiledir) )
             
             cols = [delButton
-                    , QtWidgets.QLabel(str(data.docname))
-                    , QtWidgets.QLabel(str(data.efiledir))
+                    , Label.create_label(str(data.docname),col_widths[1])
+                    , Label.create_label(str(data.efiledir),col_widths[2])
                     , viewButton]
             
             populateTableRow(self.ui.documentList, r, cols)
@@ -308,17 +313,25 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
     def listAdverseParties(self):
         self.clearPartyFields()
         self.ui.partyList.setRowCount(0)
+
+        col_widths = [100,50,100,150]
+        for c,w in enumerate(col_widths): self.ui.partyList.setColumnWidth(c,w)
         
         for r, party in MtrFuncs.generateAdverPartyList(self.ui.clientNum.text(), self.ui.matterNum.text()):
             self.ui.partyList.insertRow(r)
             self.ui.partyList.setRowHeight(r,20)
-            firstnamelabel = QtWidgets.QLabel(party.firstname)
+            print(party)
+            firstnamelabel = Label.create_label(party.firstname,col_widths[0])
             firstnamelabel.partyid = party.partyid
+
+            reason = Label.create_label(party.reasondescription,col_widths[3])
+            reason.long_desc = party.reasondescription
+
             cols = [firstnamelabel,
-                    QtWidgets.QLabel(party.middlename),
-                    QtWidgets.QLabel(party.lastname),
-                    QtWidgets.QLabel(party.reasondescription)]
-            
+                    Label.create_label(party.middlename,col_widths[1]),
+                    Label.create_label(party.lastname,col_widths[2]),
+                    reason]
+
             populateTableRow(self.ui.partyList, r, cols)
     
     def addAdverseParty(self):
@@ -342,7 +355,7 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
         
         self.ui.apMiddle.setText(self.ui.partyList.cellWidget(row,1).text())
         self.ui.apLast.setText(self.ui.partyList.cellWidget(row,2).text())
-        self.ui.reason.setText(self.ui.partyList.cellWidget(row,3).text())
+        self.ui.reason.setText(self.ui.partyList.cellWidget(row,3).long_desc)
         
         self.ui.apFirst.setReadOnly(False)
         self.ui.apMiddle.setReadOnly(False)
@@ -384,7 +397,7 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
                 data[key]['PartyID'] = partyid
             data[key]['ClientNum'] = self.ui.clientNum.text()
             data[key]['MatterNum'] = self.ui.matterNum.text()
-            
+            pprint.pprint(data)
             CONN.connect()
             CONN.saveData(data)
             CONN.closecnxn()
@@ -409,7 +422,7 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
         self.ui.apNew.setEnabled(True)
         self.ui.apClear.setEnabled(True)
             
-    def editMatter(self ):
+    def editMatter(self):
         reply = checkChangesMade(self)
         if reply == 0:
             if self.action is None:
@@ -426,6 +439,7 @@ if isinstance(widget,(QtWidgets.QLineEdit, QtWidgets.QComboBox, QtWidgets.QCheck
                 self.ui.actionEdit.setText('Edit')
                 self.loadMatter()
                 self.clearPartyFields()
+
                 
     def saveChanges(self):
         

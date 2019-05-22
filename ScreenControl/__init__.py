@@ -1,10 +1,37 @@
 from UI import *
 from functools import partial
 
+
+class Label(QtWidgets.QLabel):
+
+    @classmethod
+    def create_label(cls,text,width = 90):
+        inst = cls(width)
+        inst.setText(text)
+        return inst
+
+    def __init__(self,width):
+        super().__init__()
+        self.resize(width, 25)
+
+    def paintEvent(self,event):
+        painter = QtGui.QPainter(self)
+
+        metrics = QtGui.QFontMetrics(self.font())
+        elided = metrics.elidedText(self.text(), QtCore.Qt.ElideRight, self.width())
+
+        painter.drawText(self.rect(), self.alignment(), elided)
+
+    def setText(self, text):
+        metrics = QtGui.QFontMetrics(self.font())
+        elided_text = metrics.elidedText(text, QtCore.Qt.ElideRight, self.width())
+        super().setText(elided_text)
+
+
 def checkChangesMade(cls):
     if cls.changes == True:
         reply = QtWidgets.QMessageBox.question(cls, "Save Changes?", "Would you like to save your changes?"
-                                           ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
+                                           ,QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No| QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel)
         if reply == QtWidgets.QMessageBox.Yes:
             cls.saveChanges()
             cls.changes = False
@@ -27,10 +54,13 @@ def initializeChangeTracking(cls,widget):
         widget.activated.connect(partial(markAsChanged,cls))
     elif isinstance(widget, QtWidgets.QTextEdit):
         widget.undoAvailable.connect(partial(markAsChanged,cls))
+    elif isinstance(widget, (QtWidgets.QSpinBox, QtWidgets.QDoubleSpinBox)):
+        widget.valueChanged.connect(partial(markAsChanged, cls))
         
 
 def markAsChanged(cls):
     cls.changes = True
+
     
 def populateTableRow(table, r, cols):
     for c, col in enumerate(cols):
@@ -38,7 +68,7 @@ def populateTableRow(table, r, cols):
             table.setItem(r,c,col)
         else:
             table.setCellWidget(r,c,col)
-            
+
 
 def stateGenerator():
     states = """Alabama,AL

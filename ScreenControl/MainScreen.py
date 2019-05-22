@@ -203,7 +203,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
                 
             names = "\n".join(nameDisplay)
             reply = QtWidgets.QMessageBox.question(self, "Matching Names?", "The following names are possible adverse party matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
-                                               ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
+                                               ,QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No| QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel)
             
             if reply == QtWidgets.QMessageBox.Yes:
                 return False
@@ -244,7 +244,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
                
             names = "\n".join(dupeDisp)
             reply = QtWidgets.QMessageBox.question(self, "Matching Names?", "The following names or address are possible duplicate matches to this new client. \n{}\nDo you want to save this new client still?".format(names)
-                                               ,QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Cancel)
+                                               ,QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No| QtWidgets.QMessageBox.Cancel, QtWidgets.QMessageBox.Cancel)
             
             if reply == QtWidgets.QMessageBox.Yes:
                 return False
@@ -259,10 +259,10 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             if self.ui.deleteAccount.delAction == '0':
                 
                 reply = QtWidgets.QMessageBox.question(self, 'Restore Account', 'Do you want to restore this account from the deleted group?',
-                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                                   QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Yes)
             else:
                 reply = QtWidgets.QMessageBox.question(self, 'Delete Account', 'Do you want to delete this account?',
-                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                                   QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Yes)
 
             if reply == QtWidgets.QMessageBox.Yes:        
                 if self.ui.deleteAccount.actionDate is None:

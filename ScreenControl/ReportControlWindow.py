@@ -83,7 +83,7 @@ class ReportingControls(QtWidgets.QFrame):
         
         if self.reporting:
             reply = QtWidgets.QMessageBox.question(self, 'Currently Reporting', 'Altering the report columns will clear the report.  Do you want to continue?',
-                                               QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                               QtWidgets.QMessageBox.Yes|QtWidgets.QMessageBox.No,QtWidgets.QMessageBox.Yes)
             if reply == QtWidgets.QMessageBox.No:
                 self.ui.displayCols.itemWidget(item, 0).setCheckState(2)
                 return

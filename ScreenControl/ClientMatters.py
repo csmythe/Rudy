@@ -200,7 +200,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
                 closeDate = self.ui.dateClosed.minimumDate().toPyDate()
             else:
                 reply = QtWidgets.QMessageBox.question(self, 'Open Matter','This matter has been closed.  Do you want to re-open the matter?',
-                                                   QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No
+                                                   QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Yes
                                                 )
                 if reply == QtWidgets.QMessageBox.Yes:
                     closeDate = self.ui.dateClosed.minimumDate().toPyDate()
@@ -291,7 +291,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
         
     def deleteAttachment(self, path):
         reply = QtWidgets.QMessageBox.question(self, 'Delete Attachment?', 'Would you like to delete this attachment (will not delete from hard drive)?',
-                                           QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+                                           QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.NoQtWidgets.QMessageBox.Yes)
         if reply == QtWidgets.QMessageBox.Yes:
             data = {'action':'delete',
                     'table':'OriginalDocuments',
@@ -560,7 +560,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
 
     def mark_to_be_deleted(self):
         if not self.matter.delete:
-            reply = QMessageBox.question(self, 'Delete Matter?', 'You are about to mark this matter to be deleted.  Are you sure?', QMessageBox.Yes, QMessageBox.No)
+            reply = QMessageBox.question(self, 'Delete Matter?', 'You are about to mark this matter to be deleted.  Are you sure?', QMessageBox.Yes| QMessageBox.No,QtWidgets.QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 data = {'action': 'update',
                         'table': 'ClientMatters',
@@ -585,7 +585,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
                 self.changes = False
                 self.close()
         else:
-            reply = QMessageBox.question(self, 'Reverse Deletion', 'Would you like to unflag this matter for deletion?', QMessageBox.Yes, QMessageBox.No)
+            reply = QMessageBox.question(self, 'Reverse Deletion', 'Would you like to unflag this matter for deletion?', QMessageBox.Yes|QMessageBox.No,QtWidgets.QMessageBox.Yes)
             if reply == QMessageBox.Yes:
                 data = {'action': 'update',
                         'table': 'ClientMatters',

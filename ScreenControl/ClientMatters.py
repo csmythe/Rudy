@@ -138,9 +138,9 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
 
         self.ui.dateOpened.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateopened),"%Y-%m-%d")))
 
-        if dt.strptime(str(self.matter.dateclosed if self.matter.dateclosed is not None else '1900-01-01'),"%Y-%m-%d").date() > self.ui.dateClosed.minimumDate().toPyDate():
+        if dt.strptime(str(self.matter.dateclosed if self.matter.dateclosed is not None else  self.ui.dateClosed.minimumDate().toPyDate() ),"%Y-%m-%d").date() > self.ui.dateClosed.minimumDate().toPyDate():
             self.ui.closed.setCheckState(2)
-            self.ui.dateClosed.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")))
+            self.ui.dateClosed.setDate(QtCore.QDate(dt.strptime(str(self.matter.dateclosed if self.matter.dateclosed is not None else self.ui.dateClosed.minimumDate().toPyDate()),"%Y-%m-%d")))
             self.ui.boxNumber.setText(self.matter.boxnumber)
         else:
             self.ui.closed.setCheckState(0)

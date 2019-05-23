@@ -458,6 +458,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.ui.addMatter.setEnabled(True)
         
         self.listMatters()
+        self.changes = False
             
     def listMatters(self):
         

@@ -191,7 +191,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
         
     def closeMatter(self,state):
         if state ==2:
-            if self.matter.dateclosed is None or self.ui.dateClosed.minimumDate().toPyDate() >= self.matter.dateclosed:
+            if self.ui.dateClosed.minimumDate().toPyDate() >= dt.strptime(str(self.matter.dateclosed if self.matter.dateclosed is not None else self.ui.dateClosed.minimumDate().toPyDate()), "%Y-%m-%d").date():
                 closeDate = dt.today().date()
             else:
                 closeDate = dt.strptime(str(self.matter.dateclosed),"%Y-%m-%d")
@@ -291,7 +291,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
         
     def deleteAttachment(self, path):
         reply = QtWidgets.QMessageBox.question(self, 'Delete Attachment?', 'Would you like to delete this attachment (will not delete from hard drive)?',
-                                           QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.NoQtWidgets.QMessageBox.Yes)
+                                           QtWidgets.QMessageBox.Yes| QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.Yes)
         if reply == QtWidgets.QMessageBox.Yes:
             data = {'action':'delete',
                     'table':'OriginalDocuments',

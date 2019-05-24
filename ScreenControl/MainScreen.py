@@ -288,11 +288,12 @@ class MainMatterScreen(QtWidgets.QMainWindow):
     def saveChanges(self):
         
         if self.action is not None:
-            if self.checkName():
-                return
-            
-            if self.checkForDupes():
-                return
+            if self.action == 'new':
+                if self.checkName():
+                    return
+
+                if self.checkForDupes():
+                    return
 
             if ClntFuncs.client_num_is_used(self.ui.clientNum.text()) and self.action == 'new':
                 Alert.create('Client Number Used','Client Number is already in use.')
@@ -393,6 +394,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         page_data = self.ui.page_num.itemData(index)
         if page_data is None:
             return
+
         self.ui.clientList.setRowCount(0)
 
         for r, i in enumerate(page_data.index):

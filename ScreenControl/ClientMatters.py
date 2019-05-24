@@ -308,6 +308,7 @@ if isinstance(widget,(QtWidgets.QLineEdit,QtWidgets.QDoubleSpinBox, QtWidgets.QS
             self.listDocuments()
         
     def viewAttachment(self, path):
+        path = '"'+path+'"'
         Popen([path],shell = True)
         
     def listAdverseParties(self):

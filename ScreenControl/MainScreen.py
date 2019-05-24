@@ -64,8 +64,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         self.ui.next_page.clicked.connect(partial(self._nav_pages,1))
         self.ui.prev_page.clicked.connect(partial(self._nav_pages,-1))
         self.ui.page_num.activated.connect(self.load_client_list)
-        
-        
+
     def resetFilters(self):
         self.ui.searchFirst.clear()
         self.ui.searchLast.clear()
@@ -168,18 +167,20 @@ class MainMatterScreen(QtWidgets.QMainWindow):
         if reply == 0:
             self.action = 'new'
             self.unlockFields()
-            clientnum = ClntFuncs.getNextClientNum()
-            # clientnum = 1 if clientnum is None else clientnum
-            if len(clientnum) > 0:
-                self.ui.clientNum.setText(str(clientnum.nextnum[0]))
-            else:
-                self.ui.clientNum.setText(str(1))
-            
+            self.set_next_client_num()
             self.ui.deleteAccount.delAction = '0'
             self.ui.saveClientChanges.setEnabled(True)
             self.ui.addMatter.setEnabled(False)
             self.ui.deleteAccount.setEnabled(False)
-            
+
+    def set_next_client_num(self):
+        clientnum = ClntFuncs.getNextClientNum()
+
+        if len(clientnum) > 0:
+            self.ui.clientNum.setText(str(clientnum.nextnum[0]))
+        else:
+            self.ui.clientNum.setText(str(1))
+
     def checkName(self):
         apData = ClntFuncs.compileAdversePartyList()
         partyFullNames = apData.fullname.values
@@ -252,8 +253,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
                 return True
         else:
             return False
-        
-        
+
     def deleteClient(self):
         if self.action == 'update':
             if self.ui.deleteAccount.delAction == '0':
@@ -293,56 +293,55 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             
             if self.checkForDupes():
                 return
-            
-            if self.ui.clientNum.text().strip() == '':
-                alert = QtWidgets.QMessageBox()
-                alert.setWindowTitle('Missing Client #')
-                alert.setText("Enter Client Number Before Saving")
-                alert.exec_()
-                return
-            elif self.ui.state.currentIndex() == 0:
-                alert = QtWidgets.QMessageBox()
-                alert.setWindowTitle('Missing State')
-                alert.setText("Select a state before saving")
-                alert.exec_()
-                return
-            else:
-                data = {'action':self.action,
-                        'table':'[NortonAbert].[dbo].[ClientInfo]',
-                        'values':{'FirstName':str(self.ui.firstName.text()).strip(),
-                                  'LastName':str(self.ui.lastName.text()).strip(),
-                                  'MiddleInitial':str(self.ui.middleInitial.text()).strip(),
-                                  'Address1':str(self.ui.addr1.text()).strip(),
-                                  'Address2':str(self.ui.addr2.text()).strip(),
-                                  'City':str(self.ui.city.text()).strip(),
-                                  'State':str(self.ui.state.currentText()),
-                                  'ZipCode':str(self.ui.zipcode.text()).strip(),
-                                  'Married':str(int(self.ui.spouseInfo.isChecked())),
-                                  'SpouseFirstName':str(self.ui.firstName_2.text()).strip(),
-                                  'SpouseLastName':str(self.ui.lastName_2.text()).strip(),
-                                  'SpouseMiddleInitial':str(self.ui.middleInitial_2.text()).strip(),
-                                  'Phone1':str(self.ui.phone1.text()).strip(),
-                                  'Phone2':str(self.ui.phone2.text()).strip(),
-                                  'Email':str(self.ui.email.text()).strip(),
-                                  'Notes':str(self.ui.notes.toPlainText()).strip(),
-                                  'DoNotRep':str(int(self.ui.donotrep.checkState() / 2))},
-                        'params':{}
-                        }
-                if self.action == 'new':
-                    key = 'values'
-                    data[key]['Deleted'] = str(0)
-                else:key = 'params'
-                
-                data[key]['ClientNum'] = str(self.ui.clientNum.text())
 
-                CONN.connect()
-                CONN.saveData(data)
-                CONN.closecnxn()
-                
-                self.changes = False
-                self.listClients()
-                self.lockFields()
-                self.ui.addMatter.setEnabled(True)
+            # if ClntFuncs.client_num_is_used(self.ui.clientNum.text()) and self.action == 'new':
+            #     Alert.create('Client Number Used','Client Number is already in use.')
+            #     return
+
+            if self.ui.clientNum.text().strip() == '':
+                Alert.create('Missing Client #','Enter Client Number Before Saving')
+                return
+
+            if self.ui.state.currentIndex() == 0:
+                Alert.create('Missing State',"Select a state before saving")
+                return
+
+            data = {'action':self.action,
+                    'table':'[NortonAbert].[dbo].[ClientInfo]',
+                    'values':{'FirstName':str(self.ui.firstName.text()).strip(),
+                              'LastName':str(self.ui.lastName.text()).strip(),
+                              'MiddleInitial':str(self.ui.middleInitial.text()).strip(),
+                              'Address1':str(self.ui.addr1.text()).strip(),
+                              'Address2':str(self.ui.addr2.text()).strip(),
+                              'City':str(self.ui.city.text()).strip(),
+                              'State':str(self.ui.state.currentText()),
+                              'ZipCode':str(self.ui.zipcode.text()).strip(),
+                              'Married':str(int(self.ui.spouseInfo.isChecked())),
+                              'SpouseFirstName':str(self.ui.firstName_2.text()).strip(),
+                              'SpouseLastName':str(self.ui.lastName_2.text()).strip(),
+                              'SpouseMiddleInitial':str(self.ui.middleInitial_2.text()).strip(),
+                              'Phone1':str(self.ui.phone1.text()).strip(),
+                              'Phone2':str(self.ui.phone2.text()).strip(),
+                              'Email':str(self.ui.email.text()).strip(),
+                              'Notes':str(self.ui.notes.toPlainText()).strip(),
+                              'DoNotRep':str(int(self.ui.donotrep.checkState() / 2))},
+                    'params':{}
+                    }
+            if self.action == 'new':
+                key = 'values'
+                data[key]['Deleted'] = str(0)
+            else:key = 'params'
+
+            data[key]['ClientNum'] = str(self.ui.clientNum.text())
+
+            CONN.connect()
+            CONN.saveData(data)
+            CONN.closecnxn()
+
+            self.changes = False
+            self.listClients()
+            self.lockFields()
+            self.ui.addMatter.setEnabled(True)
 
     def _nav_pages(self, direction):
         page = self.ui.page_num.currentIndex() + direction
@@ -352,6 +351,7 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             page = self.ui.page_num.count() - 1
 
         self.ui.page_num.setCurrentIndex(page)
+        self.load_client_list(page)
 
 
     def listClients(self):

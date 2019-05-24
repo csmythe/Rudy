@@ -75,6 +75,15 @@ def getClientInfo(clientNum):
     
     return data
 
+def client_num_is_used(client_num):
+    q = 'SELECT ClientNum FROM [NortonAbert].[dbo].[ClientInfo] WHERE ClientNum = ?'
+    v = [str(client_num)]
+    CONN.connect()
+    data = CONN.readData(q, v)
+    CONN.closecnxn()
+    return len(data) > 0
+
+
 def compileDupeCheck(clientnum):
     q = """
     SELECT ClientNum

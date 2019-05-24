@@ -28,6 +28,16 @@ class Label(QtWidgets.QLabel):
         super().setText(elided_text)
 
 
+class Alert(QtWidgets.QMessageBox):
+
+    @classmethod
+    def create(cls,title,text):
+        inst = cls()
+        inst.setWindowTitle(title)
+        inst.setText(text)
+        inst.exec_()
+
+
 def checkChangesMade(cls):
     if cls.changes == True:
         reply = QtWidgets.QMessageBox.question(cls, "Save Changes?", "Would you like to save your changes?"

@@ -2,11 +2,11 @@ from connectors import *
 from pandas.io.sql import read_sql
 
 class Target:
-    driver = '{SQL Server}'
+    # driver = '{SQL Server}'
     # server = r'App1\SQLEXPRESS'
-    # driver = '{ODBC Driver 17 for SQL Server}'
-    # server = r'system76-pc'
-    server = 'DESKTOP-QGM6LRE\SQLEXPRESS'
+    driver = '{ODBC Driver 17 for SQL Server}'
+    server = r'system76-pc'
+    # server = 'DESKTOP-QGM6LRE\SQLEXPRESS'
     username = 'nortUser'
     pwd = 'nortPassword123'
     database = 'NortonAbert'

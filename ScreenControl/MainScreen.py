@@ -294,9 +294,9 @@ class MainMatterScreen(QtWidgets.QMainWindow):
             if self.checkForDupes():
                 return
 
-            # if ClntFuncs.client_num_is_used(self.ui.clientNum.text()) and self.action == 'new':
-            #     Alert.create('Client Number Used','Client Number is already in use.')
-            #     return
+            if ClntFuncs.client_num_is_used(self.ui.clientNum.text()) and self.action == 'new':
+                Alert.create('Client Number Used','Client Number is already in use.')
+                return
 
             if self.ui.clientNum.text().strip() == '':
                 Alert.create('Missing Client #','Enter Client Number Before Saving')
